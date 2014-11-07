@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_biotable_sanity_check</title>
+  <meta name="keywords" content="replicate_regression_biotable_sanity_check">
+  <meta name="description" content="[statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; replicate_regression_biotable_sanity_check.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_biotable_sanity_check
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)
+
+ Statistical sanity check for priors in multi-curve regression
+ including a suggestion for changing the priors
+
+ to check whether spread of posterior mean parameters is consistent 
+ with prior spread, iterate this and you get a sort of empirical bayes!</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/utils/print_matrix.html" class="code" title="function b = print_matrix(matrix,rownames,colnames)">print_matrix</a>	b = print_matrix(matrix,rownames,colnames)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>	[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% [statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Statistical sanity check for priors in multi-curve regression</span>
+0004 <span class="comment">% including a suggestion for changing the priors</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% to check whether spread of posterior mean parameters is consistent</span>
+0007 <span class="comment">% with prior spread, iterate this and you get a sort of empirical bayes!</span>
+0008 
+0009 <a name="_sub0" href="#_subfunctions" class="code">function [statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)</a>
+0010 
+0011 flag_jump  = isfinite(options.t_jump);
+0012 ind_finite = find(isfinite(all_y));
+0013 
+0014 <span class="keyword">if</span> strcmp(options.basis,<span class="string">'cos+sin'</span>),
+0015   alpha = reshape(alpha, size(alpha,1)/2,2*size(alpha,2)); 
+0016   beta  = reshape(beta,  size(beta,1)/2,2*size(beta,2),size(beta,3)); 
+0017 <span class="keyword">end</span>
+0018 
+0019 statistics.values            = all_y(ind_finite);
+0020 statistics.sigma             = all_sigma(ind_finite);
+0021 statistics.residuals         = all_residuals(ind_finite);
+0022 
+0023 statistics.alpha_offset.mean = nanmean(alpha_offset);
+0024 statistics.alpha_offset.std  = nanstd(alpha_offset');
+0025 statistics.alpha_offset.rms  = sqrt(nanmean(alpha_offset.^2));
+0026 statistics.alpha_offset.values = alpha_offset;
+0027 
+0028 statistics.alpha.mean        = nanmean(alpha,2);
+0029 statistics.alpha.std         = nanstd(alpha')';
+0030 statistics.alpha.rms         = sqrt(nanmean(alpha.^2,2));
+0031 statistics.alpha.values      = alpha;
+0032 
+0033 statistics.alpha_jump.mean   = nanmean(alpha_jump);
+0034 statistics.alpha_jump.std    = nanstd(alpha_jump');
+0035 statistics.alpha_jump.rms    = sqrt(nanmean(alpha_jump.^2));
+0036 statistics.alpha_jump.values = alpha_jump;
+0037 
+0038 <span class="comment">%% ignore zero values (arising from time series with only 1 replicate)</span>
+0039 ind = find(beta_offset ~=0);
+0040 statistics.beta_offset.mean  = nanmean(beta_offset(ind));
+0041 statistics.beta_offset.std   = nanstd(beta_offset(ind));
+0042 statistics.beta_offset.rms   = sqrt(nanmean(beta_offset(ind).^2));
+0043 statistics.beta_offset.values= beta_offset;
+0044 
+0045 <span class="comment">%% ignore zero values (arising from time series with only 1 replicate)</span>
+0046 beta_mask = beta; beta_mask(beta_mask==0) = nan;
+0047 statistics.beta.mean         = nanmean(reshape(beta_mask,options.n_comp,prod(size(beta))/options.n_comp),2);
+0048 statistics.beta.std          = nanstd( reshape(beta_mask,options.n_comp,prod(size(beta))/options.n_comp),0,2);
+0049 statistics.beta.rms          = sqrt(nanmean(reshape(beta_mask.^2,options.n_comp,prod(size(beta))/options.n_comp),2));
+0050 statistics.beta.values       = beta;
+0051 
+0052 <span class="comment">%% ignore zero values (arising from time series with only 1 replicate)</span>
+0053 ind = find(beta_jump ~=0);
+0054 statistics.beta_jump.mean    = nanmean(beta_jump(ind));
+0055 statistics.beta_jump.std     = nanstd(beta_jump(ind));
+0056 statistics.beta_jump.rms     = sqrt(nanmean(beta_jump(ind).^2));
+0057 statistics.beta_jump.values  = beta_jump;
+0058 
+0059 display(sprintf(<span class="string">'Residuals           (RMS): %f'</span>,sqrt(mean(statistics.residuals(:).^2))));
+0060 display(sprintf(<span class="string">'Standard deviations (RMS): %f'</span>,sqrt(mean(statistics.sigma(:).^2))));
+0061 display(sprintf(<span class="string">'Residual/Std. Dev.  (RMS): %f'</span>,sqrt(mean((statistics.residuals(:)./statistics.sigma(:)).^2))));
+0062 
+0063 names = [{<span class="string">'Offset'</span>}; repmat({<span class="string">'Mode'</span>},length(statistics.alpha.std),1);{<span class="string">'Jump'</span>}];
+0064 
+0065 central_prior_vector = [options.central_offset_width;<span class="keyword">...</span>
+0066             options.central_mode_width';<span class="keyword">...</span>
+0067             options.central_jump_width];
+0068 
+0069 central_posterior_vector =  [statistics.alpha_offset.std; <span class="keyword">...</span>
+0070                  statistics.alpha.std;<span class="keyword">...</span>
+0071                  statistics.alpha_jump.std];
+0072 
+0073 deviation_prior_vector = [options.deviation_offset_width;<span class="keyword">...</span>
+0074                           options.deviation_mode_width';<span class="keyword">...</span>
+0075               options.deviation_jump_width];
+0076 
+0077 deviation_posterior_vector = [statistics.beta_offset.std; <span class="keyword">...</span>
+0078                   statistics.beta.std; <span class="keyword">...</span>
+0079                   statistics.beta_jump.std];
+0080 
+0081   display(<span class="string">'Distribution widths for central curves'</span>);
+0082   display(<a href="../.././replicate_regression/utils/print_matrix.html" class="code" title="function b = print_matrix(matrix,rownames,colnames)">print_matrix</a>([central_prior_vector, central_posterior_vector, central_prior_vector&lt;central_posterior_vector],names,{<span class="string">'Prior'</span>,<span class="string">'Post'</span>,<span class="string">'Prior too narrow'</span>}))
+0083   
+0084   display(<span class="string">'Distribution widths for deviation curves'</span>);
+0085   display(<a href="../.././replicate_regression/utils/print_matrix.html" class="code" title="function b = print_matrix(matrix,rownames,colnames)">print_matrix</a>([deviation_prior_vector, deviation_posterior_vector, deviation_prior_vector&lt;deviation_posterior_vector],names,{<span class="string">'Prior'</span>,<span class="string">'Post'</span>,<span class="string">'Prior too narrow'</span>}))
+0086   
+0087 <span class="keyword">if</span> options.verbose,
+0088   
+0089   display(sprintf(<span class="string">'To choose the posterior as your new prior, you may set'</span>));
+0090   display(sprintf(<span class="string">' options.central_offset_mean        = %f (old: %f)'</span>,statistics.alpha_offset.mean,options.central_offset_mean ));
+0091   display(sprintf(<span class="string">' options.central_offset_width       = %f (old: %f)'</span>,statistics.alpha_offset.std,options.central_offset_width));
+0092   display(sprintf(<span class="string">' options.central_first_mode_mean    = %f (old: %f)'</span>,statistics.alpha.mean(1),options.central_first_mode_mean ));
+0093   display(sprintf(<span class="string">' options.central_first_mode_width   = %f (old: %f)'</span>,statistics.alpha.std(1),options.central_first_mode_width));
+0094   display(sprintf(<span class="string">' options.central_jump_mean          = %f (old: %f)'</span>,statistics.alpha_jump.mean,options.central_jump_mean ));
+0095   display(sprintf(<span class="string">' options.central_jump_width         = %f (old: %f)'</span>,statistics.alpha_jump.std,options.central_jump_width));
+0096   display(sprintf(<span class="string">' options.deviation_offset_mean      = %f (old: %f)'</span>,statistics.beta_offset.mean,options.deviation_offset_mean ));
+0097   display(sprintf(<span class="string">' options.deviation_offset_width     = %f (old: %f)'</span>,statistics.beta_offset.std,options.deviation_offset_width));
+0098   display(sprintf(<span class="string">' options.deviation_first_mode_mean  = %f (old: %f)'</span>,statistics.beta.mean(1),options.deviation_first_mode_mean ));
+0099   display(sprintf(<span class="string">' options.deviation_first_mode_width = %f (old: %f)'</span>,statistics.beta.std(1),options.deviation_first_mode_width));
+0100   display(sprintf(<span class="string">' options.deviation_jump_mean        = %f (old: %f)'</span>,statistics.beta_jump.mean,options.deviation_jump_mean ));
+0101   display(sprintf(<span class="string">' options.deviation_jump_width       = %f (old: %f)'</span>,statistics.beta_jump.std,options.deviation_jump_width));
+0102   
+0103 <span class="keyword">end</span>
+0104 
+0105 <span class="comment">% fit parameters for measurement standard deviation model sigma^2 == a + b * y</span>
+0106 
+0107 <span class="keyword">if</span> options.update_prior_means,
+0108   options_update.central_mode_mean          = statistics.alpha.mean';
+0109   options_update.central_jump_mean          = statistics.alpha_jump.mean;
+0110   options_update.deviation_mode_mean        = statistics.beta.mean';
+0111   options_update.deviation_jump_mean        = statistics.beta_jump.mean;
+0112 <span class="keyword">else</span>
+0113   options_update.central_mode_mean          = 0 * statistics.alpha.mean';
+0114   options_update.central_jump_mean          = 0 * statistics.alpha_jump.mean;
+0115   options_update.deviation_mode_mean        = 0 * statistics.beta.mean';
+0116   options_update.deviation_jump_mean        = 0 * statistics.beta_jump.mean;
+0117 <span class="keyword">end</span>
+0118 
+0119 options_update.deviation_offset_mean      = statistics.beta_offset.mean;
+0120 options_update.central_offset_mean        = statistics.alpha_offset.mean;
+0121 
+0122 options_update.central_offset_width       = options.updating_factor * statistics.alpha_offset.std;
+0123 options_update.central_first_mode_width   = options.updating_factor * sqrt(statistics.alpha.std(1)^2 + statistics.alpha.mean(1)^2);
+0124 options_update.central_jump_width         = options.updating_factor * statistics.alpha_jump.std;
+0125 options_update.deviation_offset_width     = options.updating_factor * statistics.beta_offset.std;
+0126 options_update.deviation_first_mode_width = options.updating_factor * sqrt(statistics.beta.std(1)^2 + statistics.beta.mean(1)^2);
+0127 options_update.deviation_jump_width       = options.updating_factor * statistics.beta_jump.std;
+0128 
+0129 rms_relative_residual = sqrt(mean((statistics.residuals(:)./statistics.sigma(:)).^2));
+0130 
+0131 <span class="keyword">if</span> rms_relative_residual &lt; 0.8,
+0132   display(sprintf(<span class="string">'Residuals are too small: either error bars are too large or updating factor %f should be decreased\n'</span>,options.updating_factor));
+0133 <span class="keyword">end</span>
+0134 <span class="keyword">if</span> rms_relative_residual &gt; 1.2,
+0135   display(sprintf(<span class="string">'Residuals are too large: either error bars are too small or updating factor %f should be increased\n'</span>,options.updating_factor));
+0136 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

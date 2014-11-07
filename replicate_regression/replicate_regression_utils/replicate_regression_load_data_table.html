@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_load_data_table</title>
+  <meta name="keywords" content="replicate_regression_load_data_table">
+  <meta name="description" content="[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; replicate_regression_load_data_table.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_load_data_table
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)
+
+ Load data table and convert it into data structure suitable for replicate regression</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="replicate_regression_insert_stddev.html" class="code" title="function sigma = replicate_regression_insert_stddev(x, sigma, foptions, r)">replicate_regression_insert_stddev</a>	sigma = replicate_regression_insert_stddev(x,sigma,foptions)</li><li><a href="../.././replicate_regression/utils/UniProt_to_bsu.html" class="code" title="function LocusID = UniProt_to_bsu(UniProtnumber,translation_table)">UniProt_to_bsu</a>	</li><li><a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>	</li><li><a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>	function [label,indices] = label_names(names,allnames, method)</li><li><a href="../.././replicate_regression/utils/load_any_table.html" class="code" title="function result = load_any_table(filename,delimiter)">load_any_table</a>	list = load_any_table(filename)</li><li><a href="../.././replicate_regression/utils/sbtab_table_load.html" class="code" title="function sbtab = sbtab_table_load(filename)">sbtab_table_load</a>	sbtab = sbtab_table_load(filename)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)</a>
+0002 
+0003 <span class="comment">% [data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Load data table and convert it into data structure suitable for replicate regression</span>
+0006 
+0007 
+0008 <span class="comment">% ------------------------------------------------------------------</span>
+0009 <span class="comment">% load data table and create structure 'data_replicates'</span>
+0010 
+0011 foptions_default = struct(<span class="string">'data_std_log'</span>, 0.3, <span class="string">'data_std_relative'</span>, 0.3, <span class="string">'translation_table_file'</span>,[], <span class="string">'convenience_name'</span>, [], <span class="string">'data_scale'</span>, [], <span class="string">'data_outliers_upper'</span>,inf,<span class="string">'data_outliers_lower'</span>,-inf,<span class="string">'ignore_std_deviations'</span>,1);
+0012 
+0013 foptions_default.ID_potential = {<span class="string">'GiNumber'</span>,<span class="string">'BSUnumber'</span>,<span class="string">'UniprotID'</span>,<span class="string">'GeneName'</span>,<span class="string">'BGnumber'</span>};
+0014 
+0015 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'foptions'</span>,<span class="string">'struct'</span>));
+0016 foptions = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(foptions_default,foptions);
+0017 
+0018 Data = <a href="../.././replicate_regression/utils/sbtab_table_load.html" class="code" title="function sbtab = sbtab_table_load(filename)">sbtab_table_load</a>(filename);
+0019 
+0020 fn   = fieldnames(sbtab_table_get_all_columns(Data)); primary_column = fn{1};
+0021 
+0022 
+0023 <span class="comment">% ----------------------------------------------------------------</span>
+0024 
+0025 explanatory_variable = fieldnames(Data.data.attributes);
+0026 explanatory_variable = explanatory_variable{1};
+0027 
+0028 <span class="keyword">if</span> ~strcmp(<span class="string">'Time'</span>,  explanatory_variable),
+0029   display(sprintf(<span class="string">'Explanatory variable %s will be formally treated as time.'</span>,explanatory_variable))
+0030 <span class="keyword">end</span>
+0031 
+0032 
+0033 <span class="comment">% ----------------------------------------------------------------</span>
+0034 <span class="comment">%WARNING: the treatment of means and standard deviations has not been tested yet!</span>
+0035 
+0036 <span class="keyword">if</span> isfield(Data.data.attributes,<span class="string">'ValueType'</span>),
+0037   ind_sample_value = find(strcmp(Data.data.attributes.ValueType,<span class="string">'Value'</span>) + strcmp(Data.data.attributes.ValueType,<span class="string">'Mean'</span>) );
+0038   ind_sample_std   = find(strcmp(Data.data.attributes.ValueType,<span class="string">'Std'</span>));
+0039 
+0040   X                = <a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>(Data.data.data);
+0041   Values           = X(:,ind_sample_value);
+0042   StdDev           = nan * Values;
+0043   SampleName       = Data.data.headers(ind_sample_value);
+0044   SampleTime       = <a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>(Data.data.attributes.Time(ind_sample_value));
+0045   SampleReplicate  = Data.data.attributes.Replicate(ind_sample_value);
+0046   
+0047   Std_Values          = X(:,ind_sample_std);
+0048   Std_SampleName      = Data.data.headers(ind_sample_std);
+0049   Std_SampleTime      = <a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>(Data.data.attributes.Time(ind_sample_std));
+0050   Std_SampleReplicate = Data.data.attributes.Replicate(ind_sample_std);
+0051 
+0052 
+0053   <span class="keyword">for</span> it1 = 1:length(ind_sample_std);
+0054     <span class="keyword">for</span> it2 =  1:length(ind_sample_value)
+0055       <span class="keyword">if</span> strcmp(SampleName{it2},Std_SampleName{it1}) * [SampleTime(it2) == Std_SampleTime(it1)] * strcmp(SampleReplicate{it2},Std_SampleReplicate{it1}),
+0056         StdDev(:,it2) = Std_Values(:,it1);
+0057       <span class="keyword">end</span>
+0058     <span class="keyword">end</span>
+0059   <span class="keyword">end</span>
+0060   
+0061 <span class="keyword">else</span>,
+0062   
+0063   Values           = <a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>(Data.data.data);
+0064   SampleName       = Data.data.headers;
+0065   SampleTime       = <a href="../.././replicate_regression/utils/cell_string2num.html" class="code" title="function N = cell_string2num(C)">cell_string2num</a>(Data.data.attributes.Time);
+0066   SampleReplicate  = Data.data.attributes.Replicate;
+0067   StdDev           = nan * Values;
+0068 
+0069 <span class="keyword">end</span> 
+0070 
+0071 <span class="comment">% --------------------------------------------------</span>
+0072 <span class="comment">% omit data in all gene/replicate time series with less than the required number of data points</span>
+0073 
+0074 
+0075 all_rep = unique(SampleReplicate);
+0076 r       = <a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(SampleReplicate,all_rep)';
+0077 
+0078 <span class="keyword">for</span> it = 1:max(r),
+0079   <span class="comment">%% for each replicate ..</span>
+0080   number_of_data_points = sum( isfinite(Values(:,find([r==it] .* [SampleTime&gt;=0] ))) ,2);
+0081   ind_insufficient      = find(number_of_data_points &lt; foptions.data_min_data_points);
+0082   Values(ind_insufficient , find([r==it])) = nan;
+0083   StdDev(ind_insufficient , find([r==it])) = nan;
+0084 <span class="keyword">end</span>
+0085 
+0086 
+0087 <span class="comment">% --------------------------------------------------</span>
+0088 <span class="comment">% filter out all elements in which no replicate reaches the</span>
+0089 <span class="comment">% minimal number of data points</span>
+0090 
+0091 dd = zeros(size(Values,1),1);
+0092 <span class="keyword">for</span> it = 1:max(r),
+0093   dd = dd + [[sum( isfinite(Values(:,find([r==it] .* [SampleTime&gt;=0] ))) ,2) &gt;= foptions.data_min_data_points]&gt;0];
+0094 <span class="keyword">end</span>
+0095 
+0096 <span class="comment">%% keep only genes with sufficient number of replicates available</span>
+0097 data_available = find(dd&gt;=foptions.data_min_num_replicates);
+0098 Values         = Values(data_available,:);
+0099 StdDev         = StdDev(data_available,:);
+0100 
+0101 <span class="keyword">if</span> strcmp(foptions.data_scale,<span class="string">'absolute'</span>) * length(find(Values&lt;0)),
+0102   error(<span class="string">'Negative values encountered'</span>);
+0103 <span class="keyword">end</span>
+0104 
+0105 
+0106 <span class="comment">% --------------------------------------------------</span>
+0107 <span class="comment">% if required, replace all standard deviations</span>
+0108 
+0109 <span class="keyword">if</span> foptions.ignore_std_deviations,
+0110   StdDev = nan * StdDev;
+0111 <span class="keyword">end</span>
+0112 
+0113 StdDev_guess          = <a href="replicate_regression_insert_stddev.html" class="code" title="function sigma = replicate_regression_insert_stddev(x, sigma, foptions, r)">replicate_regression_insert_stddev</a>(Values,[],foptions, r);
+0114 
+0115 StdDev(isnan(StdDev)) = StdDev_guess(isnan(StdDev));
+0116 
+0117 <span class="comment">% increase std dev for outlier values by a factor of 3</span>
+0118 
+0119 <span class="keyword">if</span> strcmp(foptions.data_scale,<span class="string">'absolute'</span>)
+0120   StdDev(Values&gt;foptions.data_outliers_upper) = 3 * StdDev(Values&gt;foptions.data_outliers_upper);
+0121   StdDev(Values&lt;foptions.data_outliers_lower) = 3 * StdDev(Values&lt;foptions.data_outliers_lower);
+0122 <span class="keyword">end</span>
+0123 
+0124 
+0125 <span class="comment">% ---------------------------------------------------------------</span>
+0126 <span class="comment">% normalise by median per sample</span>
+0127 
+0128 <span class="keyword">if</span> foptions.normalise_by_median,
+0129 <span class="keyword">switch</span> foptions.data_scale,
+0130   <span class="keyword">case</span> <span class="string">'absolute'</span>,
+0131     dum = repmat(nanmedian(Values),size(Values,1),1);
+0132     Values = Values ./ dum;
+0133     StdDev = StdDev ./ dum;
+0134   <span class="keyword">case</span> {<span class="string">'log2'</span>,<span class="string">'ln'</span>,<span class="string">'log'</span>,<span class="string">'log10'</span>,<span class="string">'log2 ratio'</span>},
+0135     Values = Values - repmat(nanmedian(Values),size(Values,1),1);
+0136   <span class="keyword">otherwise</span>,
+0137     error(<span class="string">'unknown data scale'</span>);
+0138 <span class="keyword">end</span>
+0139 <span class="keyword">end</span>
+0140 
+0141 <span class="comment">% ---------------------------------------------------------------</span>
+0142 <span class="comment">% existing gene IDs are read</span>
+0143 
+0144 ID_found = fieldnames(sbtab_table_get_all_columns(Data));
+0145 <span class="keyword">if</span> isempty(foptions.convenience_name), foptions.convenience_name = ID_found{1}; <span class="keyword">end</span>
+0146 
+0147 ll = <a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(foptions.ID_potential,ID_found);
+0148 ID_list = foptions.ID_potential(find(ll));
+0149 
+0150 <span class="keyword">for</span> it = 1:length(ID_list),
+0151   <span class="keyword">if</span> isfield(sbtab_table_get_all_columns(Data),ID_list{it}), 
+0152     dummi = sbtab_table_get_column(Data,ID_list{it});
+0153     d.(ID_list{it}) = dummi(data_available);  
+0154   <span class="keyword">end</span>
+0155 <span class="keyword">end</span>
+0156 
+0157 <span class="comment">% the preferred type of gene ids is given by foptions.convenience_name</span>
+0158 <span class="comment">% if the preferred ID is not yet present, get it</span>
+0159 
+0160 <span class="keyword">if</span> ~isfield(Data.column.column,foptions.convenience_name),
+0161   translation_table = <a href="../.././replicate_regression/utils/load_any_table.html" class="code" title="function result = load_any_table(filename,delimiter)">load_any_table</a>(foptions.translation_table_file);
+0162   <span class="keyword">if</span> strcmp(foptions.convenience_name,<span class="string">'BSUnumber'</span>),
+0163     <span class="comment">%% To insert BSU numbers, Uniprot IDs must be present</span>
+0164     <span class="comment">%% Translation using 'translation_table'</span>
+0165     d.BSUnumber = <a href="../.././replicate_regression/utils/UniProt_to_bsu.html" class="code" title="function LocusID = UniProt_to_bsu(UniProtnumber,translation_table)">UniProt_to_bsu</a>(d.UniprotID,translation_table);
+0166   <span class="keyword">else</span>,
+0167     <span class="comment">%% Otherwise, 'translation_table' must yield a translation from</span>
+0168     <span class="comment">%% the first mentioned gene IDs to the preferred IDs</span>
+0169     d.(foptions.convenience_name) = repmat({<span class="string">''</span>},length(d.(ID_list{1})),1);
+0170     from = <a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(ID_list(1),translation_table(1,:));
+0171     to   = <a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>({foptions.convenience_name},translation_table(1,:));
+0172     translation_from   = translation_table(:,from);
+0173     translation_to     = translation_table(:,to);
+0174     ll                = <a href="../.././replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(lower(d.(ID_list{1})),lower(translation_from));
+0175     d.(foptions.convenience_name)(find(ll),1) = translation_to(ll(find(ll)));
+0176   <span class="keyword">end</span>
+0177 <span class="keyword">end</span>
+0178 
+0179 
+0180 <span class="comment">% ---------------------------------------------------------------</span>
+0181 
+0182 d.SampleName  = {};
+0183 d.SampleTime  = [];
+0184 d.DataMean    = [];
+0185 d.DataStd     = [];
+0186 d.Info        = {};<span class="comment">%'Data type', 'Protein ratio'; 'Unit', '1'; 'Time unit', 'min'};</span>
+0187 
+0188 datamean = [];
+0189 datastd  = [];
+0190 
+0191 <span class="keyword">for</span> it = 1:length(all_rep),
+0192   ind = find(strcmp(all_rep{it},SampleReplicate));
+0193   data_replicates.(all_rep{it})            = d;
+0194   data_replicates.(all_rep{it}).SampleName = SampleName(ind)';
+0195   data_replicates.(all_rep{it}).SampleTime = SampleTime(ind)';
+0196   data_replicates.(all_rep{it}).DataMean   = Values(:,ind);
+0197   data_replicates.(all_rep{it}).DataStd    = StdDev(:,ind);
+0198   <span class="comment">%%datamean(:,:,it) = Values(:,ind);</span>
+0199   <span class="comment">%%datastd(:,:,it)  = StdDev(:,ind);</span>
+0200 <span class="keyword">end</span>
+0201 
+0202 <span class="comment">% attention: this works only if all replicates refer to the same time points</span>
+0203 <span class="comment">%%data_pointwise_average = d;</span>
+0204 <span class="comment">%%data_pointwise_average.SampleName = data_replicates.(all_rep{1}).SampleName;</span>
+0205 <span class="comment">%%data_pointwise_average.SampleTime = data_replicates.(all_rep{1}).SampleTime;</span>
+0206 <span class="comment">%%data_pointwise_average.DataMean   = squeeze(nanmean(datamean,3));</span>
+0207 <span class="comment">%%data_pointwise_average.DataStd    = sqrt(squeeze(nanmean(datastd.^2,3)));</span>
+0208 data_pointwise_average = [];
+0209 
+0210 
+0211 <span class="comment">% ---------------------------------------------------------------</span>
+0212 <span class="comment">% build data structure 'data'</span>
+0213 <span class="comment">% keep only proteins for which data are available</span>
+0214 
+0215 data = {};
+0216 
+0217 <span class="keyword">for</span> ind = 1:length(d.(foptions.convenience_name));
+0218   my_id = d.(foptions.convenience_name){ind};
+0219   <span class="keyword">if</span> length(my_id),
+0220     <span class="keyword">if</span> length(str2num(my_id)), my_id = [<span class="string">'ID'</span> my_id]; <span class="keyword">end</span> 
+0221     data.(my_id).(foptions.convenience_name) = my_id;
+0222     <span class="keyword">for</span> it =1:length(ID_list),
+0223       data.(my_id).(ID_list{it}) = d.(ID_list{it}){ind};
+0224     <span class="keyword">end</span>
+0225     data.(my_id).t     = SampleTime;
+0226     data.(my_id).y     = Values(ind,:);
+0227     data.(my_id).sigma = StdDev(ind,:);
+0228     data.(my_id).r     = r;
+0229     data.(my_id).rep   = SampleReplicate;
+0230   <span class="keyword">end</span>
+0231 <span class="keyword">end</span>
+0232</pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

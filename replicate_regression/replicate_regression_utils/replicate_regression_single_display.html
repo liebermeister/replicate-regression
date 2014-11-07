@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_single_display</title>
+  <meta name="keywords" content="replicate_regression_single_display">
+  <meta name="description" content="replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; replicate_regression_single_display.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_single_display
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>	h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././demo/demo_replicate_regression/demo_replicate_regression_core_single.html" class="code" title="">demo_replicate_regression_core_single</a>	----------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)</a>
+0002 
+0003 <span class="comment">% replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)</span>
+0004 
+0005 options_default = struct(<span class="string">'fignum'</span>,[1,2],<span class="string">'show_central'</span>,1,<span class="string">'fontsize'</span>,12,<span class="string">'show_sample_curves'</span>,0,<span class="string">'figure_title'</span>,<span class="string">''</span>);
+0006 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'options'</span>,<span class="string">'struct'</span>,<span class="string">'t_true'</span>,<span class="string">'[]'</span>,<span class="string">'result'</span>,<span class="string">'[]'</span>));
+0007 options = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(options_default,options);
+0008 
+0009 figure(options.fignum(1)); clf; h = [];
+0010 set(gca,<span class="string">'FontSize'</span>,options.fontsize); 
+0011 
+0012 <span class="keyword">if</span> length(result),
+0013   <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(result.t,result.x,[result.x-result.sigma; result.x+result.sigma],[],[0 0 1]); hold on;
+0014 <span class="keyword">end</span>
+0015 
+0016 h = []; 
+0017 legends = {};
+0018 <span class="keyword">if</span> length(result.t),h = [h errorbar(t,y,sigma,<span class="string">'bo'</span>)];                 hold on; legends =[legends {<span class="string">'Data'</span>}]; <span class="keyword">end</span>
+0019 <span class="keyword">if</span> length(t_true),  h = [h plot(t_true,x_true,<span class="string">'m--'</span>,<span class="string">'Linewidth'</span>,2)];  legends = [legends {<span class="string">'True curve'</span>}];   <span class="keyword">end</span>
+0020 
+0021 <span class="keyword">if</span> length(h), legend(h,legends,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>); <span class="keyword">end</span>
+0022 hold off;
+0023 title(options.figure_title);
+0024 
+0025 <span class="comment">% if options.show_sample_curves</span>
+0026 <span class="comment">%  figure(3); clf; set(gca,'FontSize',options.fontsize); hold on; h=[];</span>
+0027 <span class="comment">%  h(1) = plot(t_true,x_true,'b--','Linewidth',2); hold on;</span>
+0028 <span class="comment">%  h(2) = errorbar(t,y,sigma,'rs');  hold on;</span>
+0029 <span class="comment">%  h(5) = plot(result.t_int,result.x_sample_replicate(:,1),'r--');  hold on;</span>
+0030 <span class="comment">%  h(6) = plot(t_int,result.x_sample_replicate(:,2),'m--');  hold on;</span>
+0031 <span class="comment">%  h(7) = plot(t_int,result.x_sample_replicate(:,3),'g--');  hold on;</span>
+0032 <span class="comment">%  hold off;</span>
+0033 <span class="comment">%  %axis([0 3 0 1.5])</span>
+0034 <span class="comment">%  legend(h,'True curve','Data 1','Data 2','Data 3','Sampled 1','Sampled 2','Sampled 3','Location','NorthWest');</span>
+0035 <span class="comment">% title(options.figure_title);</span>
+0036 <span class="comment">% end</span></pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

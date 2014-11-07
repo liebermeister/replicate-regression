@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of biotable_interpolation_graphics_std</title>
+  <meta name="keywords" content="biotable_interpolation_graphics_std">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; biotable_interpolation_graphics_std.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>biotable_interpolation_graphics_std
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="rr_colors.html" class="code" title="function colors = rr_colors()">rr_colors</a>	</li><li><a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>	transform a vector (row or column) into a column vector</li><li><a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../.././replicate_regression/utils/lognormal_normal2log.html" class="code" title="function [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention)">lognormal_normal2log</a>	convert characteristics of log-normal random variable  X</li><li><a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>	h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)</li><li><a href="../.././replicate_regression/utils/sfigure.html" class="code" title="function h = sfigure(h)">sfigure</a>	SFIGURE  Create figure window (minus annoying focus-theft).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);</a>
+0002 
+0003 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'outfile'</span>,<span class="string">'[]'</span>,<span class="string">'replicate_names'</span>,<span class="string">'[]'</span>));
+0004 
+0005 p_default = struct(<span class="string">'fignum'</span>,1, <span class="keyword">...</span>
+0006            <span class="string">'show_log2'</span>,0,<span class="keyword">...</span>
+0007            <span class="string">'logarithmic_data'</span>,0,<span class="keyword">...</span>
+0008                    <span class="string">'log_transformation'</span>, <span class="string">'arithmetic'</span>, <span class="keyword">...</span>
+0009            <span class="string">'subplot'</span>,[],<span class="keyword">...</span>
+0010                    <span class="string">'show_errorbars'</span>,1,<span class="keyword">...</span>
+0011            <span class="string">'fontsize'</span>,12,<span class="keyword">...</span>
+0012                    <span class="string">'show_bands'</span>, 1, <span class="keyword">...</span>
+0013            <span class="string">'flag_only_data'</span>,0,<span class="keyword">...</span>
+0014            <span class="string">'flag_omit_replicates'</span>,0,<span class="keyword">...</span>
+0015            <span class="string">'linewidth'</span>,1,<span class="keyword">...</span>
+0016            <span class="string">'markerwidth'</span>,1,<span class="keyword">...</span>
+0017            <span class="string">'image_format'</span>,<span class="string">'eps'</span>,<span class="keyword">...</span>
+0018            <span class="string">'show_labels'</span>,1, <span class="keyword">...</span>
+0019                    <span class="string">'data_lines'</span>, 0, <span class="keyword">...</span>
+0020                    <span class="string">'title_string'</span>, [], <span class="keyword">...</span>
+0021                    <span class="string">'print_title'</span>, 1, <span class="keyword">...</span>
+0022                    <span class="string">'name_print_capital'</span>, 0, <span class="keyword">...</span>
+0023                    <span class="string">'x_label'</span>, <span class="string">''</span>,<span class="keyword">...</span>
+0024                    <span class="string">'y_label'</span>, <span class="string">''</span>,<span class="keyword">...</span>
+0025                    <span class="string">'no_legend'</span>, 0,<span class="keyword">...</span>
+0026                    <span class="string">'convenience_name'</span>, [], <span class="keyword">...</span>
+0027                    <span class="string">'mark_data'</span>, []);
+0028 
+0029 p  = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(p_default,p);
+0030 
+0031 pname = [];
+0032 
+0033 <span class="comment">%% if replicates are stored in fields -&gt; reformat them as a list</span>
+0034 
+0035 <span class="keyword">if</span> isstruct(replicate_averaged),
+0036   dum = replicate_averaged; 
+0037   replicate_averaged = {};
+0038   fn = fieldnames(dum);
+0039   <span class="keyword">for</span> it = 1:length(fn)
+0040     replicate_averaged{it} = getfield(dum,fn{it});
+0041   <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="keyword">if</span> p.show_log2,
+0045   <span class="keyword">if</span> ~p.logarithmic_data,
+0046     [combined.DataMean, combined.DataStd] = <a href="../.././replicate_regression/utils/lognormal_normal2log.html" class="code" title="function [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention)">lognormal_normal2log</a>(combined.DataMean, combined.DataStd,p.log_transformation);
+0047     combined.DataMean = combined.DataMean/log(2);
+0048     combined.DataStd  = combined.DataStd/log(2);
+0049     [averaged.DataMean, averaged.DataStd] = <a href="../.././replicate_regression/utils/lognormal_normal2log.html" class="code" title="function [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention)">lognormal_normal2log</a>(averaged.DataMean, averaged.DataStd,p.log_transformation);
+0050     averaged.DataMean = averaged.DataMean/log(2);
+0051     averaged.DataStd  = averaged.DataStd/log(2);
+0052     <span class="keyword">for</span> it = 1:length(replicate_averaged),
+0053       [replicate_averaged{it}.DataMean, replicate_averaged{it}.DataStd] = <span class="keyword">...</span>
+0054           <a href="../.././replicate_regression/utils/lognormal_normal2log.html" class="code" title="function [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention)">lognormal_normal2log</a>(replicate_averaged{it}.DataMean, replicate_averaged{it}.DataStd,p.log_transformation);
+0055       replicate_averaged{it}.DataMean = replicate_averaged{it}.DataMean/log(2);
+0056       replicate_averaged{it}.DataStd  = replicate_averaged{it}.DataStd/log(2);
+0057   <span class="keyword">end</span>
+0058   <span class="keyword">end</span>
+0059 <span class="keyword">end</span>
+0060 
+0061 n_rep = length(replicate_averaged);
+0062 
+0063 <span class="keyword">if</span> ~isfield(combined,<span class="string">'ProteinName'</span>), 
+0064   <span class="keyword">if</span> isfield(combined,<span class="string">'GeneName'</span>), 
+0065     combined.ProteinName = combined.GeneName; 
+0066   <span class="keyword">elseif</span> isfield(combined,<span class="string">'MetaboliteName'</span>), 
+0067     combined.ProteinName = combined.MetaboliteName; 
+0068   <span class="keyword">else</span>
+0069     dum = fieldnames(combined); 
+0070     combined.ProteinName = getfield(combined,dum{1});
+0071   <span class="keyword">end</span>
+0072 <span class="keyword">end</span>
+0073 
+0074 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'ind'</span>,<span class="string">'1:length(combined.ProteinName)'</span>));
+0075 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'ind_show'</span>,<span class="string">'ind'</span>));
+0076 
+0077 colors = <a href="rr_colors.html" class="code" title="function colors = rr_colors()">rr_colors</a>;
+0078 
+0079 <span class="comment">%if outfile,</span>
+0080 <span class="comment">%  sfigure(p.fignum); %clf;</span>
+0081 <span class="comment">%end</span>
+0082 
+0083 <span class="keyword">for</span> itt = 1:length(ind_show),
+0084 
+0085   it = ind_show(itt);
+0086   
+0087   <span class="keyword">if</span> length(p.subplot)==0,
+0088     <a href="../.././replicate_regression/utils/sfigure.html" class="code" title="function h = sfigure(h)">sfigure</a>(itt); clf;
+0089   <span class="keyword">else</span>,
+0090     <a href="../.././replicate_regression/utils/sfigure.html" class="code" title="function h = sfigure(h)">sfigure</a>(p.fignum); 
+0091     subplot(p.subplot(1),p.subplot(2),mod(itt-1,prod(p.subplot))+1); 
+0092     p.replicate_names = [];
+0093   <span class="keyword">end</span>
+0094 
+0095   x_mean  = averaged.DataMean(it,:);
+0096   x_std   = averaged.DataStd(it,:);
+0097   x_upper = x_mean + x_std;
+0098   x_lower = x_mean - x_std;
+0099   h       = [];
+0100   
+0101   hold on;
+0102 
+0103   <span class="keyword">if</span> sum(isfinite(x_mean)),
+0104 
+0105     <span class="comment">%% average curve</span>
+0106     
+0107     <span class="keyword">if</span> ~p.flag_only_data,
+0108       <span class="keyword">if</span> p.show_bands ==0,
+0109         h(1) = <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(averaged.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_mean),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_std),[],[0 0 0]);        hold on
+0110       <span class="keyword">end</span>
+0111     <span class="keyword">end</span>
+0112 
+0113     <span class="comment">%% interpolated curves</span>
+0114 
+0115     <span class="keyword">if</span> ~[p.flag_only_data+p.flag_omit_replicates],
+0116       <span class="keyword">for</span> it_r = 1:n_rep,
+0117         ind     = find(it_r==cell2mat(combined.SampleName));
+0118         present = sum(isfinite(combined.DataMean(it,ind)));
+0119         <span class="keyword">if</span> present,
+0120           <span class="keyword">if</span> p.show_bands,
+0121             <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(replicate_averaged{it_r}.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(replicate_averaged{it_r}.DataMean(it,:)),<span class="keyword">...</span>
+0122                        <a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(replicate_averaged{it_r}.DataStd(it,:)),[],colors{it_r});  hold on; 
+0123           <span class="keyword">else</span>
+0124             plot(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(replicate_averaged{it_r}.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(replicate_averaged{it_r}.DataMean(it,:)),<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{it_r});  hold on; 
+0125           <span class="keyword">end</span>
+0126         <span class="keyword">end</span>
+0127       <span class="keyword">end</span>
+0128     <span class="keyword">end</span>
+0129  
+0130     <span class="comment">%% average curve</span>
+0131     
+0132     <span class="keyword">if</span> ~p.flag_only_data,
+0133       <span class="keyword">if</span> p.flag_omit_replicates,
+0134         h(1) = <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(averaged.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_mean),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_std),[],[0 0 0]);        hold on
+0135       <span class="keyword">else</span>,      
+0136         h(1) = plot(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(averaged.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_mean),<span class="string">'-'</span>,<span class="string">'Color'</span>,[0 0 0],<span class="string">'Linewidth'</span>,p.linewidth);  hold on;
+0137         plot(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(averaged.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_upper),<span class="string">'--'</span>,<span class="string">'Color'</span>, [0 0 0],<span class="string">'Linewidth'</span>,p.linewidth); hold on;
+0138         plot(<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(averaged.SampleTime),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(x_lower),<span class="string">'--'</span>,<span class="string">'Color'</span>, [0 0 0],<span class="string">'Linewidth'</span>,p.linewidth); hold on
+0139       <span class="keyword">end</span>
+0140     <span class="keyword">end</span>
+0141 
+0142     <span class="comment">%% data points</span>
+0143 
+0144     <span class="keyword">for</span> it_r = 1:n_rep, 
+0145       ind     = find([it_r==cell2mat(combined.SampleName)] .* isfinite(combined.DataMean(it,:)'));
+0146       present = sum(isfinite(combined.DataMean(it,ind)));
+0147       <span class="keyword">if</span> present,
+0148         <span class="keyword">if</span> p.show_errorbars,
+0149           h(1+it_r) = errorbar(combined.SampleTime(ind),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(combined.DataMean(it,ind)),<span class="keyword">...</span>
+0150                                <a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(combined.DataStd(it,ind)),<span class="string">'.'</span>,<span class="string">'Color'</span>,colors{it_r},<span class="keyword">...</span>
+0151                                <span class="string">'Linewidth'</span>,p.markerwidth,<span class="string">'Markersize'</span>,15*p.markerwidth); 
+0152         <span class="keyword">else</span>
+0153           h(1+it_r) = plot(combined.SampleTime(ind),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(combined.DataMean(it,ind)),<span class="keyword">...</span>
+0154                            <span class="string">'.'</span>,<span class="string">'Color'</span>,colors{it_r},<span class="string">'Markersize'</span>,15*p.markerwidth); 
+0155         <span class="keyword">end</span>
+0156         hold on
+0157         <span class="keyword">if</span> p.data_lines,
+0158           plot(combined.SampleTime(ind),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(combined.DataMean(it,ind)),<span class="keyword">...</span>
+0159                <span class="string">'-'</span>,<span class="string">'Color'</span>,colors{it_r},<span class="string">'Linewidth'</span>,p.markerwidth);           hold on
+0160         <span class="keyword">end</span>
+0161       <span class="keyword">else</span>,
+0162         h(1+it_r) = plot(0,nan,<span class="string">'.'</span>,<span class="string">'Color'</span>,colors{it_r}); hold on
+0163       <span class="keyword">end</span>
+0164       hold on
+0165     <span class="keyword">end</span>
+0166 
+0167     <span class="keyword">if</span> length(p.mark_data),
+0168       <span class="keyword">for</span> it_r = 1:n_rep, 
+0169         ind     = find([it_r==cell2mat(combined.SampleName)] .* isfinite(combined.DataMean(it,:)'));
+0170         my_ind = ind(find(p.mark_data(it,ind)));
+0171         plot(combined.SampleTime(my_ind),<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(combined.DataMean(it,my_ind)),<span class="keyword">...</span>
+0172              <span class="string">'ok'</span>,<span class="string">'Markersize'</span>,10*p.markerwidth);       
+0173       <span class="keyword">end</span>
+0174     <span class="keyword">end</span>
+0175     
+0176     <span class="comment">%% labels etc</span>
+0177     <span class="comment">%hold off;</span>
+0178     set(gca,<span class="string">'FontSize'</span>,p.fontsize,<span class="string">'LineWidth'</span>,p.linewidth);
+0179     
+0180     <span class="keyword">if</span> p.show_log2 + p.logarithmic_data,
+0181       <span class="comment">%%      set(gca,'YTickLabel',2.^cell_string2num(cellstr(get(gca,'YTickLabel'))));</span>
+0182        axis tight;
+0183     <span class="keyword">else</span>,
+0184       axis_tight_positive; 
+0185     <span class="keyword">end</span>
+0186     
+0187     <span class="keyword">if</span> p.show_labels,
+0188 
+0189       <span class="keyword">if</span> length(p.convenience_name), 
+0190           ts = combined.(p.convenience_name){it}; 
+0191         <span class="keyword">else</span>,
+0192           ts = combined.ProteinName{it};
+0193         <span class="keyword">end</span>
+0194         
+0195         <span class="keyword">if</span> p.name_print_capital,
+0196           ts = [upper(ts(1)) ts(2:end)];
+0197         <span class="keyword">end</span>
+0198 
+0199         <span class="keyword">if</span> p.print_title,
+0200           tss = ts;
+0201           <span class="keyword">if</span> length(p.title_string), tss = [p.title_string <span class="string">' '</span> ts]; <span class="keyword">end</span>
+0202           title(tss,<span class="string">'FontSize'</span>,p.fontsize);
+0203         <span class="keyword">end</span>
+0204       
+0205       <span class="keyword">if</span> ~p.no_legend,
+0206         <span class="keyword">if</span> length(p.replicate_names),
+0207           <span class="keyword">if</span> ~p.flag_only_data,
+0208             legend(h,[{<span class="string">'Mean'</span>}; <a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(p.replicate_names)],<span class="string">'Location'</span>,<span class="string">'Best'</span>); 
+0209           <span class="keyword">else</span>,
+0210             legend(h(2:end),[<a href="../.././replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(p.replicate_names)],<span class="string">'Location'</span>,<span class="string">'Best'</span>); 
+0211           <span class="keyword">end</span> 
+0212         <span class="keyword">end</span>
+0213       <span class="keyword">end</span>
+0214     <span class="keyword">end</span>
+0215     
+0216   <span class="keyword">end</span>
+0217  
+0218   xlabel(p.x_label);   ylabel(p.y_label);
+0219     
+0220   <span class="comment">%% save graphics</span>
+0221   
+0222   <span class="keyword">if</span> isempty(pname),
+0223     pname = strrep(strrep(ts,<span class="string">' '</span>,<span class="string">'_'</span>),<span class="string">'/'</span>,<span class="string">'_'</span>);
+0224   <span class="keyword">end</span>
+0225   
+0226   <span class="keyword">if</span> outfile,
+0227     
+0228     <span class="keyword">if</span> length(p.subplot)==0,
+0229       <span class="keyword">switch</span> p.image_format,
+0230         <span class="keyword">case</span> <span class="string">'eps'</span>,  print([ outfile <span class="string">'_'</span> pname <span class="string">'.eps'</span>],[<span class="string">'-f'</span> num2str(itt)],<span class="string">'-depsc'</span>);
+0231           display(sprintf(<span class="string">'Saving graphics file %s'</span>,[ outfile <span class="string">'_'</span> pname <span class="string">'.eps'</span>]));
+0232         <span class="keyword">case</span> <span class="string">'png'</span>,  print([ outfile <span class="string">'_'</span> pname <span class="string">'.png'</span>],[<span class="string">'-f'</span> num2str(itt)],<span class="string">'-dpng'</span>);
+0233           display(sprintf(<span class="string">'Saving graphics file %s'</span>,[ outfile <span class="string">'_'</span> pname <span class="string">'.png'</span>]));
+0234       <span class="keyword">end</span>
+0235       
+0236     <span class="keyword">elseif</span> [mod(itt,prod(p.subplot))==0] + [itt == length(ind_show)],
+0237       
+0238       <span class="keyword">switch</span> p.image_format,
+0239         <span class="keyword">case</span> <span class="string">'eps'</span>,  print([ outfile <span class="string">'_'</span> pname <span class="string">'.eps'</span>],[<span class="string">'-f'</span> num2str(p.fignum)],<span class="string">'-depsc'</span>);
+0240           display(sprintf(<span class="string">'Saving graphics file %s'</span>,[ outfile <span class="string">'_'</span> pname <span class="string">'.eps'</span>]));
+0241         <span class="keyword">case</span> <span class="string">'png'</span>,  print([ outfile <span class="string">'_'</span> pname <span class="string">'.png'</span>],[<span class="string">'-f'</span> num2str(p.fignum)],<span class="string">'-dpng'</span>);
+0242           display(sprintf(<span class="string">'Saving graphics file %s'</span>,[ outfile <span class="string">'_'</span> pname <span class="string">'.png'</span>]));
+0243       <span class="keyword">end</span>
+0244       clf
+0245       pname = [];
+0246 
+0247     <span class="keyword">end</span>
+0248     
+0249   <span class="keyword">end</span>
+0250   
+0251 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

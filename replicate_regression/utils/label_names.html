@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of label_names</title>
+  <meta name="keywords" content="label_names">
+  <meta name="description" content="function [label,indices] = label_names(names,allnames, method)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">utils</a> &gt; label_names.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>label_names
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [label,indices] = label_names(names,allnames, method)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [label,indices] = label_names(names,allnames,method) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function [label,indices] = label_names(names,allnames, method)
+ method 'multiple'</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_load_data_table.html" class="code" title="function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)">replicate_regression_load_data_table</a>	[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</li><li><a href="Protein_name_to_bsu.html" class="code" title="function LocusID = protein_name_to_bsu(ProteinName,translation_table)">Protein_name_to_bsu</a>	</li><li><a href="UniProt_to_bsu.html" class="code" title="function LocusID = UniProt_to_bsu(UniProtnumber,translation_table)">UniProt_to_bsu</a>	</li><li><a href="biotable_join_replicates.html" class="code" title="function [combined,collected] = biotable_join_replicates(data,p)">biotable_join_replicates</a>	[combined,collected] = biotable_join_replicates(data,p)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% function [label,indices] = label_names(names,allnames, method)</span>
+0002 <span class="comment">% method 'multiple'</span>
+0003 
+0004 <a name="_sub0" href="#_subfunctions" class="code">function [label,indices] = label_names(names,allnames,method)</a>
+0005 
+0006 case_sensitive=0;
+0007 <span class="keyword">if</span> not(case_sensitive), names=upper(names); allnames=upper(allnames); <span class="keyword">end</span>
+0008 
+0009 <span class="keyword">if</span> ~exist(<span class="string">'method'</span>), method = <span class="string">'single'</span>; <span class="keyword">end</span>
+0010 
+0011 <span class="keyword">switch</span> method
+0012  <span class="keyword">case</span> <span class="string">'multiple'</span>
+0013  label = cell(length(names),1);
+0014  <span class="keyword">for</span> k=1:length(names)
+0015   hits = find(strcmp(allnames,names(k)));
+0016   <span class="keyword">if</span> length(hits)&gt;0 
+0017     label{k} = hits;
+0018   <span class="keyword">end</span>
+0019  <span class="keyword">end</span>
+0020 
+0021 <span class="keyword">case</span> <span class="string">'single'</span>
+0022  label = zeros(length(names),1);
+0023  <span class="keyword">for</span> k=1:length(names)
+0024   hits = find(strcmp(allnames,names(k)));
+0025   <span class="keyword">if</span> length(hits)&gt;0 
+0026     label(k) = hits(1);
+0027   <span class="keyword">end</span>
+0028  <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">case</span> <span class="string">'fields'</span>
+0031     allnames=strrep(allnames,<span class="string">'-'</span>,<span class="string">'_'</span>);
+0032     allnames=strrep(allnames,<span class="string">'/'</span>,<span class="string">'_'</span>);
+0033     allnames=strrep(allnames,<span class="string">'.'</span>,<span class="string">'_'</span>);
+0034     names=strrep(names,<span class="string">'-'</span>,<span class="string">'_'</span>);
+0035     names=strrep(names,<span class="string">'/'</span>,<span class="string">'_'</span>);
+0036     names=strrep(names,<span class="string">'.'</span>,<span class="string">'_'</span>);
+0037    indices=struct(<span class="string">'a'</span>,<span class="string">''</span>);
+0038    <span class="keyword">for</span> i=1:length(allnames),
+0039       allnames{i}
+0040      eval([<span class="string">'indices.'</span> allnames{i} <span class="string">'='</span> num2str(i) <span class="string">';'</span>]);
+0041   <span class="keyword">end</span>
+0042 
+0043   label=zeros(length(names),1);
+0044   <span class="keyword">for</span> k=1:length(names)
+0045      <span class="keyword">if</span> isfield(indices,names{k}),
+0046        label(k) = getfield(indices,names{k});
+0047      <span class="keyword">end</span>
+0048   <span class="keyword">end</span>
+0049 
+0050 <span class="keyword">end</span>
+0051 
+0052</pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_display</title>
+  <meta name="keywords" content="replicate_regression_display">
+  <meta name="description" content="h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; replicate_regression_display.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_display
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)
+
+ Graphical output for results of replicate time series regression</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="rr_colors.html" class="code" title="function colors = rr_colors()">rr_colors</a>	</li><li><a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>	h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././demo/demo_replicate_regression.html" class="code" title="">demo_replicate_regression</a>	----------------------------------------------------------------</li><li><a href="../.././demo/demo_replicate_regression/demo_replicate_regression_core.html" class="code" title="">demo_replicate_regression_core</a>	----------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)</a>
+0002 
+0003 <span class="comment">% h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Graphical output for results of replicate time series regression</span>
+0006 
+0007 options_default = struct(<span class="string">'fignum'</span>,[1,2],<span class="string">'show_central'</span>,1,<span class="string">'fontsize'</span>,12,<span class="string">'show_sample_curves'</span>,0,<span class="string">'figure_title'</span>,<span class="string">''</span>,<span class="string">'show_crossvalidation'</span>,1,<span class="string">'show_bands'</span>,1,<span class="string">'show_errorbars'</span>,1);
+0008 
+0009 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'options'</span>,<span class="string">'struct'</span>,<span class="string">'t_true'</span>,<span class="string">'[]'</span>,<span class="string">'result'</span>,<span class="string">'[]'</span>,<span class="string">'linewidth'</span>,<span class="string">'1'</span>));
+0010 
+0011 options = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(options_default,options);
+0012 
+0013 colors = <a href="rr_colors.html" class="code" title="function colors = rr_colors()">rr_colors</a>;
+0014 
+0015 
+0016 <span class="comment">% ---------------------------------</span>
+0017 <span class="comment">% Display results</span>
+0018 
+0019 t1     = t(l==1);
+0020 t2     = t(l==2);
+0021 t3     = t(l==3);
+0022 y1     = y(l==1);
+0023 y2     = y(l==2);
+0024 y3     = y(l==3);
+0025 sigma1 = sigma(l==1);
+0026 sigma2 = sigma(l==2);
+0027 sigma3 = sigma(l==3);
+0028 
+0029 <span class="keyword">if</span> length(result),
+0030   t_reg            = result.t;
+0031   <span class="keyword">if</span> options.show_central,
+0032     x_central        = result.x_central;
+0033     sigma_central    = result.sigma_central;
+0034   <span class="keyword">end</span>
+0035   x_reg            = result.x_average;
+0036   sigma_reg        = result.sigma_average;
+0037   x_reg_replicate     = result.x_replicate;
+0038   sigma_reg_replicate = result.sigma_replicate;
+0039 <span class="keyword">else</span>
+0040   sigma_reg_replicate = [];
+0041 <span class="keyword">end</span>
+0042 
+0043 
+0044 figure(options.fignum(1)); clf; h = [];
+0045 set(gca,<span class="string">'FontSize'</span>,options.fontsize); 
+0046 h = []; legends = {}; 
+0047 
+0048 
+0049 <span class="keyword">if</span> options.show_central,
+0050   <span class="keyword">if</span> length(result),
+0051     <span class="keyword">if</span> ~options.show_bands,
+0052       h = <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg,[x_reg-sigma_reg; x_reg+sigma_reg],[],[0 0 0]); hold on;
+0053     <span class="keyword">end</span>
+0054     legends = [legends {<span class="string">'Regression'</span>}]; 
+0055   <span class="keyword">end</span>
+0056 <span class="keyword">end</span>
+0057 
+0058 
+0059 <span class="keyword">if</span> length(sigma_reg_replicate),
+0060 <span class="keyword">if</span> options.show_bands,
+0061   <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{1},[x_reg_replicate{1}-sigma_reg_replicate{1}; x_reg_replicate{1}+sigma_reg_replicate{1}],[],colors{1},[],[],[],<span class="string">'-'</span>,2); hold on;
+0062   <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{2},[x_reg_replicate{2}-sigma_reg_replicate{2}; x_reg_replicate{2}+sigma_reg_replicate{2}],[],colors{2},[],[],[],<span class="string">'-'</span>,2); hold on;
+0063   <a href="../.././replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{3},[x_reg_replicate{3}-sigma_reg_replicate{3}; x_reg_replicate{3}+sigma_reg_replicate{3}],[],colors{3},[],[],[],<span class="string">'-'</span>,2);hold on;
+0064 <span class="keyword">else</span>,
+0065   plot(t_reg,x_reg_replicate{1},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{1},<span class="string">'Linewidth'</span>,2); hold on;
+0066   plot(t_reg,x_reg_replicate{2},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{2},<span class="string">'Linewidth'</span>,2); hold on;
+0067   plot(t_reg,x_reg_replicate{3},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{3},<span class="string">'Linewidth'</span>,2); hold on;
+0068 <span class="keyword">end</span>
+0069 <span class="keyword">end</span>
+0070 
+0071 <span class="keyword">if</span> options.show_central,
+0072   <span class="keyword">if</span> length(result),
+0073     <span class="keyword">if</span> options.show_bands,
+0074       h = [h plot(t_reg,x_reg,<span class="string">'k-'</span>,<span class="string">'Linewidth'</span>,2)]; 
+0075       plot(t_reg,x_reg + sigma_reg,<span class="string">'k--'</span>);  
+0076       plot(t_reg,x_reg - sigma_reg,<span class="string">'k--'</span>);  
+0077     <span class="keyword">end</span>
+0078     legends = [legends {<span class="string">'Regression'</span>}]; 
+0079   <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 
+0082 hold on;
+0083 
+0084 <span class="keyword">if</span> options.show_errorbars,
+0085   <span class="keyword">if</span> length(t1), h = [h errorbar(t1,y1,sigma1,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{1})];  legends =[legends {<span class="string">'Data 1'</span>}]; <span class="keyword">end</span>
+0086   <span class="keyword">if</span> length(t2), h = [h errorbar(t2,y2,sigma2,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{2})];  legends =[legends {<span class="string">'Data 2'</span>}]; <span class="keyword">end</span>
+0087   <span class="keyword">if</span> length(t3), h = [h errorbar(t3,y3,sigma3,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{3})];  legends =[legends {<span class="string">'Data 3'</span>}]; <span class="keyword">end</span>
+0088 <span class="keyword">else</span>,
+0089   <span class="keyword">if</span> length(t1), h = [h plot(t1,y1,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{1})];  legends =[legends {<span class="string">'Data 1'</span>}]; <span class="keyword">end</span>
+0090   <span class="keyword">if</span> length(t2), h = [h plot(t2,y2,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{2})];  legends =[legends {<span class="string">'Data 2'</span>}]; <span class="keyword">end</span>
+0091   <span class="keyword">if</span> length(t3), h = [h plot(t3,y3,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'Color'</span>,colors{3})];  legends =[legends {<span class="string">'Data 3'</span>}]; <span class="keyword">end</span>
+0092 <span class="keyword">end</span>
+0093 
+0094 
+0095 <span class="keyword">if</span> length(t_true), h = [h plot(t_true,x_true,<span class="string">'m--'</span>,<span class="string">'Linewidth'</span>,2)];  legends = [legends {<span class="string">'True curve'</span>}];   <span class="keyword">end</span>
+0096 
+0097 <span class="keyword">if</span> options.show_crossvalidation,
+0098   <span class="keyword">if</span> isfield(result,<span class="string">'x_crossvalidation'</span>);
+0099     xc1     = result.x_crossvalidation(l==1);
+0100     xc2     = result.x_crossvalidation(l==2);
+0101     xc3     = result.x_crossvalidation(l==3);
+0102     h = [h plot(t1,xc1,<span class="string">'*'</span>,<span class="string">'Color'</span>,colors{1})];  legends = [legends {<span class="string">'Crossvalidation 1'</span>}]; 
+0103     h = [h plot(t2,xc2,<span class="string">'*'</span>,<span class="string">'Color'</span>,colors{2})];  legends = [legends {<span class="string">'Crossvalidation 2'</span>}]; 
+0104     h = [h plot(t3,xc3,<span class="string">'*'</span>,<span class="string">'Color'</span>,colors{3})];  legends = [legends {<span class="string">'Crossvalidation 3'</span>}]; 
+0105   <span class="keyword">end</span>
+0106 <span class="keyword">end</span>
+0107 
+0108 <span class="keyword">if</span> length(h), legend(h,legends,<span class="string">'Location'</span>,<span class="string">'Best'</span>); <span class="keyword">end</span>
+0109 hold off; title(options.figure_title);
+0110 
+0111 axis tight
+0112 
+0113 <span class="keyword">if</span> options.show_sample_curves
+0114  figure(3); clf; set(gca,<span class="string">'FontSize'</span>,options.fontsize);  h=[];
+0115  h(1) = plot(t_true,x_true,<span class="string">'b--'</span>,<span class="string">'Linewidth'</span>,2); 
+0116  h(2) = errorbar(t1,y1,sigma1,<span class="string">'rs'</span>);  
+0117  h(3) = errorbar(t2,y2,sigma2,<span class="string">'ms'</span>);  
+0118  h(4) = errorbar(t3,y3,sigma3,<span class="string">'gs'</span>);  
+0119  h(5) = plot(t_reg,result.x_sample_replicate(:,1),<span class="string">'r--'</span>);  
+0120  h(6) = plot(t_reg,result.x_sample_replicate(:,2),<span class="string">'m--'</span>);  
+0121  h(7) = plot(t_reg,result.x_sample_replicate(:,3),<span class="string">'g--'</span>);  
+0122  <span class="comment">%axis([0 3 0 1.5])</span>
+0123  hold off;  
+0124  legend(h,<span class="string">'True curve'</span>,<span class="string">'Data 1'</span>,<span class="string">'Data 2'</span>,<span class="string">'Data 3'</span>,<span class="string">'Sampled 1'</span>,<span class="string">'Sampled 2'</span>,<span class="string">'Sampled 3'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>);
+0125 title(options.figure_title);
+0126 <span class="keyword">end</span>
+0127</pre></div>
+<hr><address>Generated on Fri 07-Nov-2014 11:30:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
