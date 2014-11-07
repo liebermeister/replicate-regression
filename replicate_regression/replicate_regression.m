@@ -13,20 +13,20 @@ function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_
 %    given as row vectors (see replicate_regression_core.m)
 %
 %  flag_fix_parameters (Boolean, optional):
-%    if set to 1, the options given in the following argument(s) will be 
-%    accepted without changes (otherwise they will be checked and updated
+%    If set to 1, the options given in the following argument(s) will be accepted
+%    without changes (otherwise they will be checked and updated)
 %
 %  varagin (optional) 
-%     either list of property/value pairs for algorithm options (list see below).
-%     or structure 'options' containing the property/value pairs (this is mandatory if flag_fix_parameters is set to 1)
-%     
-%     options list is ordered by priority; earlier options override later options
+%    Either a list of property/value pairs for algorithm options (list see below).
+%    or a structure containing the property/value pairs (this is mandatory if flag_fix_parameters is set to 1)
+%    
+%    The options list is supposed to be ordered by priority; earlier options override later options
 %
-%  In converting the data to logarithms, y and sigma can be interpreted either as 
-%  *median* and *geometric standard deviation* or as *mean* and *standard deviation* of the data values
-%  This is defined by the argument options.transformation
+%  In converting the data to logarithms, y and sigma are either taken to be
+%  *medians* and *geometric standard deviations*, or *means* and *standard deviations* 
+%  of the data values. The choice is defined by the argument 'options.transformation'
 %
-% OPTIONS appearing in this function ('X' marks options in function 'replicate_regression_core')
+% LIST OF OPTIONS ('X' marks options also appearing in function 'replicate_regression_core')
 %
 %  OPTION                               TYPE     DEFAULT        MEANING
 %  options.verbose                      Boolean  1              Output information during regression
@@ -75,9 +75,9 @@ function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_
 %  options.flag_draw_sample           X Boolean  1     Draw sample curve parameters and curve from the posterior
 %  options.flag_time_derivative       X Boolean  0     Compute time derivative curves
 %
-% Wolfram Liebermeister (2011)
+% Wolfram Liebermeister (2013)
 %
-% wolfram.liebermeister@charite.de
+% wolfram.liebermeister@gmail.com
 
 eval(default('flag_fix_parameters','0'));
 
@@ -236,7 +236,7 @@ else,
     [result, parameters, options, sample] = replicate_regression_core_crossvalidation(t, y, sigma, r, options.t_interp, 0, options);
   else,
     [result, parameters, options, sample] = replicate_regression_core(t, y, sigma, r, options.t_interp, options);
-    result.x_cross_average = nan * result.x_fit;
+    result.x_cross_average   = nan * result.x_fit;
     result.x_cross_replicate = nan * result.x_fit;
   end
 end
@@ -258,8 +258,8 @@ sigma_central      = result.sigma_central;
 sigma_average      = result.sigma_average;
 sigma_replicate    = result.sigma_replicate;
 
-for it_r = 1:nr,
-  x_replicate{it_r} = x_replicate{it_r} + options.shift_value;
+for it_r = 1:length(x_replicate),
+  x_replicate{it_r}          = x_replicate{it_r} + options.shift_value;
   x_sample_replicate(:,it_r) = x_sample_replicate(:,it_r) + options.shift_value;
 end
 
@@ -275,7 +275,7 @@ if options.convert_to_logarithm,
   x_cross_average   = exp(x_cross_average);
   x_cross_replicate = exp(x_cross_replicate);
 
-  for it_r = 1:nr,
+  for it_r = 1:length(x_replicate),
    [x_replicate{it_r}, sigma_replicate{it_r}] = lognormal_log2normal(x_replicate{it_r}, sigma_replicate{it_r},options.log_transformation);
    x_sample_replicate(:,it_r) = exp(x_sample_replicate(:,it_r));
   end

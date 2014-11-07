@@ -8,16 +8,16 @@ function [data_reg, options_complete, options_update] = replicate_regression_com
 % The entries of the first field are used as unique identifiers
 % The data entries are reordered in the combined data set.
 %
-% data_average, data_replicates, 
-% data_central (struct arrays):   regression results
+% data_reg.average, data_reg.replicates, 
+% data_reg.central (struct arrays):   regression results
 % statistics:                     additional information about the regression procedure
-% data_collected (struct arrays): data structure from intermediate processing steps
-% data_combined (struct arrays) : data structure from intermediate processing steps
+% data_reg.combined (struct arrays) : data structure from intermediate processing steps
 %                                 field 'SampleName' contains replicate labels (as numbers)
+% data_reg.fit                    fitted data points (reordered!)
 % options:                        options for multi-curve regression (see script replicate_regression)
-%   with optional additional fields .prior_updating
-%     and .updating_factor
+%   with optional additional fields .prior_updating and .updating_factor
 
+% data_collected (struct arrays): data structure from intermediate processing steps
 
 % -----------------------------------------------------------------
 
@@ -35,30 +35,37 @@ end
 
 [data_combined, data_collected] = biotable_join_replicates(data, options);
 
+
 % -------------------------------------------------------------------------
-% If option prior_updating is set, run analysis prior_updating times and update the prior
+% If option 'prior_updating' is set, run analysis prior_updating times and update the prior
 % Revisit prior assumptions: update data error bars and priors and rerun estimation
 
-
+run_updating = 0;
 if isfield(options,'prior_updating'),
   if isfinite(options.prior_updating),
-    my_options = options;
-
-    tic;
-      for it = 1:options.prior_updating,
-        display(sprintf('Updating the priors: iteration %d',it));
-        my_options.verbose             = 0;
-        my_options.prior_updating      = nan;
-        my_options.run_crossvalidation = 0;
-        [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = biotable_replicate_regression(data_combined, my_options);
-        my_options = join_struct(my_options, options_update);
-      end    
-    time_for_prior_updating_total = toc;
-    time_for_prior_updating_per_loop = time_for_prior_updating_total/options.prior_updating;
-      
+    if options.prior_updating>0,
+      run_updating = 1;
+    end
   end
 end
 
+if run_updating,
+  my_options = options;  
+  tic;
+  for it = 1:options.prior_updating,
+    display(sprintf('Updating the priors: iteration %d\n',it));
+    my_options.verbose             = 0;
+    my_options.prior_updating      = nan;
+    my_options.run_crossvalidation = 0;
+    [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = replicate_regression_biotable(data_combined, my_options);
+    my_options = join_struct(my_options, options_update);
+  end    
+  time_for_prior_updating_total = toc;
+  time_for_prior_updating_per_loop = time_for_prior_updating_total/options.prior_updating;  
+else,
+  options_update = struct;  
+end
+  
   
 % -------------------------------
 % Do final replicate regression: build tables data_central and data_average
@@ -67,13 +74,29 @@ end
 my_options = join_struct(options, options_update);
 
 tic
-  [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = biotable_replicate_regression(data_combined, my_options);
-time_for_final_run = toc;
+  display(sprintf('Running the final regression\n'));
+
+  [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = replicate_regression_biotable(data_combined, my_options);
+  
+  time_for_final_run = toc;
 
 if options.run_crossvalidation,
-  data_pooled = data_combined;
+  data_pooled            = data_combined;
   data_pooled.SampleName = repmat(data_pooled.SampleName(1),length(data_pooled.SampleName),1);
-  [data_pooled_average, data_pooled_rep, data_pooled_central, data_pooled_crossvalidation ] = biotable_replicate_regression(data_pooled, options);
+
+  display(sprintf('Running regression with pooled data for crossvalidation\n'));
+  [data_pooled_average, data_pooled_rep, data_pooled_central, data_pooled_crossvalidation ] = replicate_regression_biotable(data_pooled, options);
+  options_naive = options;
+  
+  options_naive.central_offset_width       = inf;
+  options_naive.central_first_mode_width   = inf;
+  options_naive.central_jump_width         = inf;
+  options_naive.deviation_offset_width     = inf;
+  options_naive.deviation_first_mode_width = inf;
+  options_naive.deviation_jump_width       = inf;
+
+  display(sprintf('Running regression with pooled data and flat prior for crossvalidation\n'));
+  [data_naive_average, data_naive_rep, data_naive_central, data_naive_crossvalidation ] = replicate_regression_biotable(data_pooled, options_naive);
 end
 
 % -------------------------------------------------------------------------
@@ -92,12 +115,15 @@ if options.run_crossvalidation,
   data_reg.crossvalidation_average   = data_cross_average;
   data_reg.crossvalidation_replicate = data_cross_rep;
   data_reg.pooled_crossvalidation    = data_pooled_crossvalidation;
+  data_reg.naive_crossvalidation     = data_naive_crossvalidation;
 end
+
 
 % -------------------------------------------------------------------------
 % add information about normalised curves and data
 
 if foptions.postprocess_normalise,
+  display(sprintf('Running another regression for adjusted curves\n'));
   data_reg.adjusted = replicate_regression_normalise(data_reg, options_complete,foptions.data_scale);
 end
 
@@ -115,3 +141,18 @@ if length(foptions.log_file),
   fclose(file);
 end
 
+
+% ------------------------------------------------
+% try to spot outliers based on crossvalidation:
+% an upper percentile of absolute mismatches is counted as outliers
+
+% compare, for each data point, the leave-one out fit of the replicate curves 
+% to the actual data value and compute the mismatch
+% deviation  = abs(data_reg.combined.DataMean-data_reg.crossvalidation_replicate.DataMean);
+
+% compare, for each data point, the leave-one out fit of the replicate curves 
+% to the normal (non-leave-one-out) fit and compute the mismatch
+
+deviation  = abs(data_reg.crossvalidation_replicate.DataMean - data_reg.fit.DataMean);
+qq         = quantile(deviation(:),1-foptions.mark_outliers_percentage);
+data_reg.presumable_outliers = sparse(deviation>qq);

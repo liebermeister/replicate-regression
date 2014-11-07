@@ -1,4 +1,5 @@
-function [t,x,sigma,l,t_true,x_true, t1,t2,t3,x1,x2,x3,sigma1,sigma2,sigma3,x1_true,x2_true,x3_true,x1_true_all,x2_true_all,x3_true_all] = demo_replicate_regression_create_data
+function [t,x,sigma,l,t_true,x_true, t1,t2,t3,x1,x2,x3,sigma1,sigma2,sigma3,x1_true,x2_true,x3_true,x1_true_all,x2_true_all,x3_true_all] = demo_replicate_regression_create_data()
+
 
 % ---------------------------------
 % Create artificial data
@@ -7,8 +8,8 @@ randn('state',1);
 
 noise_level = 0.1;
 
-t_true  = 0:0.1:3;
-x_true  = 2 * [t_true./(1+t_true)] .* exp(-t_true/2);
+t_true  = 0:1:30;
+x_true  = 2 * [0.1*t_true./(1+0.1*t_true)] .* exp(-0.1*t_true/2);
 
 offset2 =  0.1*x_true;
 offset1 = -0.5*x_true;

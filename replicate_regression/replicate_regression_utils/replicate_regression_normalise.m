@@ -3,7 +3,7 @@ function data_adjusted = replicate_regression_normalise(data_reg, options, data_
 % data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);
 
 options.remove_offset = 1;
-[reg_average, reg_replicate, reg_central] = biotable_replicate_regression(data_reg.combined,options);
+[reg_average, reg_replicate, reg_central] = replicate_regression_biotable(data_reg.combined,options);
 
 data_adjusted.average    = reg_average;
 data_adjusted.replicates = reg_replicate;

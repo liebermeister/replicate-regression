@@ -23,7 +23,7 @@ function [result, parameters, options, sample] = replicate_regression_core(t,y,s
 %   Row vectors of regression curves:
 %    'x_central'  central regression curves
 %    'x_average'  regression curve averaged over replicates
-%    'x_replicate'      regression curves for the individual replicates 
+%    'x_replicate' regression curves for the individual replicates 
 %
 %   and the corresponding uncertainties (row vectors):
 %    'sigma_central', 'sigma_average', and 'sigma_replicate'
@@ -31,6 +31,7 @@ function [result, parameters, options, sample] = replicate_regression_core(t,y,s
 %  'parameters' is a structure array containing the estimated parameter values 
 %        (to be used for statistical evaluation of the prior hyperparameters)
 %
+%  'x_fit' contains the replicate regression curves, evaluated at the point of original data points
 %  'x_sample' is a vector of predicted data, obtained from a random sample from the posterior
 %
 % OPTIONS FOR THE ALGORITHM
@@ -291,7 +292,7 @@ end
 % the following entries possibly refer to the logarithmic values
 parameters.y            = y;
 parameters.sigma        = sigma;
-parameters.residuals    = y-x_fit;
+parameters.residuals    = y - x_fit;
 
 % if necessary, re-insert missing values into x_fit
 dummi = x_fit;

@@ -53,7 +53,8 @@ vv    = result.statistics.residuals;
 sigma = result.statistics.sigma;
 figure(25); clf; plot(sigma,vv,'.','Color',[.6 .6 .6]); hold on
 plot([10 0 10],[10 0 -10],'k--'); axis equal; axis([-0.1,2,-2,2]);
-title('Assumed standard errors and residuals'); 
+rms_relative_residual = sqrt(mean([result.statistics.residuals./result.statistics.sigma].^2));
+title(sprintf('Relative residual RMS %f',rms_relative_residual)); 
 xlabel('Assumed standard error'); ylabel('Residual');
 
 %% plot residuals

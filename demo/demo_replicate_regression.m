@@ -28,7 +28,7 @@ clear; ca
 
 
 % ---------------------------------
-% Run regression
+% Regression options
 
 options                            = struct;
 options.convert_to_logarithm       = 0;
@@ -38,44 +38,67 @@ options.central_first_mode_width   = 0.3;
 options.deviation_first_mode_width = 0.5;
 options.deviation_same_start       = 1;
 options.n_comp                     = nan;
-options.t_smooth                   = 2;
+options.t_smooth                   = 30;
 options.t_jump                     = nan;
-options.t_interp                   = -0.5:0.1:3;
+options.t_interp                   = -5:1:30;
 options.run_crossvalidation        = 1;
-
-[result, options_completed] = replicate_regression(t, y, sigma, r, 0, options);
 
 
 % ---------------------------------
 % Plot results
 
 fontsize = 24;
+colors   = rr_colors;
 
-replicate_regression_display(t, y, sigma, r, t_true, x_true, result, struct('fignum',4, 'fontsize',fontsize,'show_crossvalidation',0,'linewidth',2));
 
-figure(4); 
-axis([0 3 0 1.2]); set(gca,'Fontsize',fontsize); xlabel('Time (a.u.)');  ylabel('Protein level (a.u.)');
-legend off
+% ---------------------------------
+% True data
+
+figure(1); clf; set(gca,'FontSize',fontsize);
+
+replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',1)); hold on;
+
+plot(t_true,x_true,'m--', 'LineWidth',2); hold on
+plot(t_true,x1_true_all,'-','Color',colors{1}, 'LineWidth',2);  hold on
+plot(t_true,x2_true_all,'-','Color',colors{2}, 'LineWidth',2); hold on
+plot(t_true,x3_true_all,'-','Color',colors{3},'LineWidth',2);
+
+axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]'); ylabel('Protein level [a.u.]'); legend off
 
 
 % ---------------------------------
 % Naive alternative (I) 
 % assume that all data points came from one single replicate
 
-r_naive = ones(size(r));
+options_flat_prior = options;
+options_flat_prior.central_first_mode_width   = inf;
+options_flat_prior.deviation_first_mode_width = inf;
+
+r_naive      = ones(size(r));
 
 result_naive = replicate_regression(t, y, sigma, r_naive, 0, options);
 
-figure(2); 
-clf; set(gca,'FontSize',fontsize);
+figure(2); clf; set(gca,'FontSize',fontsize);
 replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',2)); hold on;
 plot(t_true,x_true,'m--', 'LineWidth',2); hold on
 plot(result_naive.t,result_naive.x_average,'k-', 'LineWidth',2); hold on
 if isfield(result_naive,'x_crossvalidation'),
-plot(t,result_naive.x_crossvalidation,'b*'); hold on
+  plot(t,result_naive.x_crossvalidation,'b*'); hold on
 end
-axis([0 3 0 1.2]); set(gca,'Fontsize',fontsize); xlabel('Time (a.u.)');  ylabel('Protein level (a.u.)');
-legend off
+axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]'); ylabel('Protein level [a.u.]'); legend off
+
+result_naive_flat = replicate_regression(t, y, sigma, r_naive, 0, options_flat_prior);
+figure(12); clf; set(gca,'FontSize',fontsize);
+replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',12)); hold on;
+plot(t_true,x_true,'m--', 'LineWidth',2); hold on
+plot(result_naive_flat.t,result_naive_flat.x_average,'k-', 'LineWidth',2); hold on
+if isfield(result_naive_flat,'x_crossvalidation'),
+  plot(t,result_naive_flat.x_crossvalidation,'b*'); hold on
+end
+axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]'); ylabel('Protein level [a.u.]'); legend off
 
 
 % ---------------------------------
@@ -91,30 +114,37 @@ options.central_first_mode_width   = sqrt(options.central_first_mode_width^2+opt
 result_naive1 = replicate_regression(t1, y1, sigma1, r1, 0, options);
 result_naive2 = replicate_regression(t2, y2, sigma2, r2, 0, options);
 result_naive3 = replicate_regression(t3, y3, sigma3, r3, 0, options);
-
-figure(3); clf; 
-set(gca,'FontSize',fontsize);
-h = replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',3)); hold on;
-h(4) = plot(t_true,x_true,'m--', 'LineWidth',2); hold on
-h(5) = plot(result_naive1.t,result_naive1.x_average,'b-', 'LineWidth',2);
-plot(result_naive2.t,result_naive2.x_average,'r-', 'LineWidth',2);
-plot(result_naive3.t,result_naive3.x_average,'-', 'Color',[1 .7 0],'LineWidth',2);
 x_separate_average = [result_naive1.x_average+result_naive2.x_average+result_naive3.x_average]/3;
-h(6) = plot(result_naive1.t,x_separate_average,'k-', 'LineWidth',2); 
-if isfield(result_naive1,'x_crossvalidation'),
-  h(7) = plot(t1,result_naive1.x_crossvalidation,'b*', 'LineWidth',2);
-plot(t2,result_naive2.x_crossvalidation,'r*', 'LineWidth',2); 
-plot(t3,result_naive3.x_crossvalidation,'*', 'Color',[1 .7 0],'LineWidth',2); hold off
-end
-axis([0 3 0 1.2]); set(gca,'Fontsize',fontsize); xlabel('Time (a.u.)');  ylabel('Protein level (a.u.)');
-legend off
 
-figure(1); clf; 
-set(gca,'FontSize',fontsize);
-replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',1)); hold on;
-plot(t_true,x_true,'m--', 'LineWidth',2); hold on
-plot(t_true,x1_true_all,'b-', 'LineWidth',2);  hold on
-plot(t_true,x2_true_all,'r-', 'LineWidth',2); hold on
-plot(t_true,x3_true_all,'-', 'Color',[1 .7 0],'LineWidth',2);
-axis([0 3 0 1.2]); set(gca,'Fontsize',fontsize); xlabel('Time (a.u.)');  ylabel('Protein level (a.u.)');
-legend off
+
+figure(3); clf; set(gca,'FontSize',fontsize);
+h    = replicate_regression_display(t, y, sigma, r, [],[],[],struct('fignum',3)); hold on;
+h(4) = plot(t_true,x_true,'m--', 'LineWidth',2); hold on
+h(5) = plot(result_naive1.t,result_naive1.x_average,'-', 'Color',colors{1}, 'LineWidth',2);
+       plot(result_naive2.t,result_naive2.x_average,'-', 'Color',colors{2}, 'LineWidth',2);
+       plot(result_naive3.t,result_naive3.x_average,'-', 'Color',colors{3},'LineWidth',2);
+h(6) = plot(result_naive1.t,x_separate_average,     'k-', 'LineWidth',2); 
+
+if isfield(result_naive1,'x_crossvalidation'),
+  h(7) = plot(t1,result_naive1.x_crossvalidation,'*', 'Color',colors{1}, 'LineWidth',2);
+         plot(t2,result_naive2.x_crossvalidation,'*', 'Color',colors{2}, 'LineWidth',2); 
+         plot(t3,result_naive3.x_crossvalidation,'*', 'Color',colors{3},'LineWidth',2); hold off
+end
+
+axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]'); ylabel('Protein level [a.u.]'); legend off
+
+
+% ---------------------------------
+% Replicate regression
+
+[result, options_completed] = replicate_regression(t, y, sigma, r, 0, options);
+
+replicate_regression_display(t, y, sigma, r, [], [], result, struct('fignum',4, 'fontsize',fontsize,'show_crossvalidation',0,'linewidth',2,'show_central',0));
+figure(4); axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]');  ylabel('Protein level [a.u.]'); legend off
+
+replicate_regression_display(t, y, sigma, r, t_true, x_true, result, struct('fignum',5, 'fontsize',fontsize,'show_crossvalidation',0,'linewidth',2,'show_bands',0));
+figure(5); axis([0 30 0 1.2]); set(gca,'Fontsize',fontsize); 
+xlabel('Time [min]');  ylabel('Protein level [a.u.]'); legend off
+

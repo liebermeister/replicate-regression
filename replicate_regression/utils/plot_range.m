@@ -28,13 +28,14 @@ end
 
 hold on;
 if~isempty(x_outer),
-  simple_range_plot(t,x_outer,col2,opacity);
+  simple_range_plot(t,x_outer,col0,col2,opacity);
 end
-simple_range_plot(t,x_inner,col1,opacity);
+simple_range_plot(t,x_inner,col0,col1,opacity);
 
 h = plot(t,x_mean,linestyle,'Color',col0,'Linewidth',linewidth);
 
-function simple_range_plot(t,x, col, opacity)
+
+function simple_range_plot(t,x, col0, col, opacity)
 
 if size(t,2) ~= 1, t = t'; end
 if size(x,2) ~= 2, x = x'; end
@@ -56,3 +57,5 @@ else,
   h = fill([t;flipud(t)],[x(:,1); flipud(x(:,2))],col,'EdgeColor',col);
 end
 
+plot(t,x(:,1),'Color',col0);
+plot(t,x(:,2),'Color',col0);

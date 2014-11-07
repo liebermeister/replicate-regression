@@ -125,3 +125,12 @@ options_update.central_jump_width         = options.updating_factor * statistics
 options_update.deviation_offset_width     = options.updating_factor * statistics.beta_offset.std;
 options_update.deviation_first_mode_width = options.updating_factor * sqrt(statistics.beta.std(1)^2 + statistics.beta.mean(1)^2);
 options_update.deviation_jump_width       = options.updating_factor * statistics.beta_jump.std;
+
+rms_relative_residual = sqrt(mean((statistics.residuals(:)./statistics.sigma(:)).^2));
+
+if rms_relative_residual < 0.8,
+  display(sprintf('Residuals are too small: either error bars are too large or updating factor %f should be decreased\n',options.updating_factor));
+end
+if rms_relative_residual > 1.2,
+  display(sprintf('Residuals are too large: either error bars are too small or updating factor %f should be increased\n',options.updating_factor));
+end
