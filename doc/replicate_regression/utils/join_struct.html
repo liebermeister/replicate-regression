@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of join_struct</title>
+  <meta name="keywords" content="join_struct">
+  <meta name="description" content="c = join_struct(a,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">utils</a> &gt; join_struct.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>join_struct
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>c = join_struct(a,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function c = join_struct(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = join_struct(a,b)
+
+ start with structure a and insert all fields from structure b</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/replicate_regression_utils/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>	</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>	[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_complete.html" class="code" title="function [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options,foptions)">replicate_regression_complete</a>	[data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_core.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core(t,y,sigma,r,tt,options)">replicate_regression_core</a>	[x_central, x_replicate, sigma_central, sigma_replicate, parameters, x_average, sigma_average, x_sample] = replicate_regression_core(t,y,sigma,r,tt,options)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_core_single.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)">replicate_regression_core_single</a>	[x_central, x_replicate, sigma_central, sigma_replicate, parameters, x_average, sigma_average, x_sample] = replicate_regression_core_single(t,y,sigma,tt,options)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_display.html" class="code" title="function h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)">replicate_regression_display</a>	h = replicate_regression_display(t,y,sigma,l,t_true,x_true,result,options)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_load_data_table.html" class="code" title="function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)">replicate_regression_load_data_table</a>	[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_set_options.html" class="code" title="function options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)">replicate_regression_set_options</a>	options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</li><li><a href="../.././replicate_regression/replicate_regression_utils/replicate_regression_single_display.html" class="code" title="function replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)">replicate_regression_single_display</a>	replicate_regression_single_display(t,y,sigma,t_true,x_true,result,options)</li><li><a href="biotable_combine_replicates.html" class="code" title="function [data_average, data_replicates, data_central, statistics, options_complete, data_combined, data_collected, options_update] = biotable_combine_replicates(data, options)">biotable_combine_replicates</a>	[data_central, data_average, data_replicates, statistics, options, data_combined, data_collected] = biotable_combine_replicates(data, options)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = join_struct(a,b)</a>
+0002 
+0003 <span class="comment">% c = join_struct(a,b)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% start with structure a and insert all fields from structure b</span>
+0006 
+0007 c = a;
+0008 
+0009 ff = fieldnames(b);
+0010 
+0011 <span class="keyword">for</span> it = 1:length(ff),
+0012   c = setfield(c,ff{it},getfield(b,ff{it}));
+0013 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 09-Nov-2014 11:01:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

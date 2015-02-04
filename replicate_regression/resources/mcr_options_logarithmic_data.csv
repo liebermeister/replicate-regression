@@ -1,0 +1,11 @@
+is_logarithmic	1
+convert_to_logarithm	0
+basis	sin_half
+n_comp	5
+insert_std	1
+central_first_mode_width	0.3
+deviation_first_mode_width	0.1
+t_smooth	60
+t_interp	[]
+prior_updating	10
+updating_factor	1.2

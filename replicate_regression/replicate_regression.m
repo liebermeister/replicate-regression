@@ -1,10 +1,9 @@
 function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
 
-% [result, options] = replicate_regression(t, y, sigma, r, varargin)
+% [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
 %
-% Bayesian replicate regression for multiple time series measured in replicate
-%  - wrapper for the function 'replicate_regression_core'
-%  - data are transformed to logarithmic scale if necessary
+% Bayesian replicate regression for multiple time series measured in replicate.
+% Data are directly provided as vectors; they can be transformed to logarithmic scale if desired
 %
 % FUNCTION ARGUMENTS
 %
@@ -20,8 +19,16 @@ function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_
 %    Either a list of property/value pairs for algorithm options (list see below).
 %    or a structure containing the property/value pairs (this is mandatory if flag_fix_parameters is set to 1)
 %    
+% FUNCTION OUTPUT
+%
+% result
+%    matlab struct with results from replicate regression
+%
+% options
+%    matlab struct with options values that were used in the calculation
 %    The options list is supposed to be ordered by priority; earlier options override later options
 %
+%  The function is a wrapper for the function 'replicate_regression_core'
 %  In converting the data to logarithms, y and sigma are either taken to be
 %  *medians* and *geometric standard deviations*, or *means* and *standard deviations* 
 %  of the data values. The choice is defined by the argument 'options.transformation'
@@ -74,6 +81,18 @@ function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_
 %  options.deviation_jump_width       X float    1     Prior widths sigma_beta_jump  (for beta_jump )
 %  options.flag_draw_sample           X Boolean  1     Draw sample curve parameters and curve from the posterior
 %  options.flag_time_derivative       X Boolean  0     Compute time derivative curves
+%
+%  The basis functions are adjusted to the final time interval [ta,tb](from tt)
+%    'cos'            : cosine function, zero slope at t=ta and t=tb
+%    'sin'            : sine function, zero value at t=ta and t=tb
+%    'sin_half'       : sine function, zero value at t=ta
+%    'sin_horizontal' : sine function, zero value at t=ta, zero slope at t=tb
+%    'cos+sin'        : cosine and sine functions, no restriction
+%    'polynomial'     : polynomial function, zero value at t=ta
+%    'exp'            : exponentially relaxing functions (t<0 => f=0; t>0 => f = 1-exp(t/tau);
+%
+%  The entire curves are shifted by a constant basis function 
+%  This can be suppressed by setting options.use_offset = 1
 %
 % Wolfram Liebermeister (2013)
 %

@@ -1,15 +1,23 @@
 ---------------------------------------------------------------------
 Replicate time series regression functions for Matlab
 
-Wolfram Liebermeister (2013)
+Wolfram Liebermeister (2015)
 ---------------------------------------------------------------------
 
 
 INSTALLATION
 
   1. Unpack the files
-  2. Include the subdirectory 'replicate_regression' into your Matlab path
-  3. For a little demo, run 'demo_replicate_regression'
+
+  2. Include the path to the matlab directory 'replicate_regression' into your Matlab path
+
+  3. Insert the path to the matlab directory 'replicate_regression' into in the m-file 'replicate_regression_DIR'
+
+  4. For a demo on a single replicate regression, run 'demo_replicate_regression'
+
+  5. To see the application to a small omics data set, 
+     run omics_data_example.m in the subdirectory replicate_regression/demo/omics_data_example
+     A data and options file is provided in the subdirectory
 
 
 REQUIREMENTS

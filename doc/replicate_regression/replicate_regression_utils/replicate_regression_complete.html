@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_complete</title>
+  <meta name="keywords" content="replicate_regression_complete">
+  <meta name="description" content="[data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_utils</a> &gt; replicate_regression_complete.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_utils&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_complete
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options,foptions) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)
+
+ Multicurve regression for omics data with multiple replicates, including prior updating
+
+ 'data_replicates' contains the replicate data sets as fields (all in biotable format, same form!!)
+ The entries of the first field are used as unique identifiers
+ The data entries are reordered in the combined data set.
+
+ data_reg.average, data_reg.replicates, 
+ data_reg.central (struct arrays):   regression results
+ statistics:                     additional information about the regression procedure
+ data_reg.combined (struct arrays) : data structure from intermediate processing steps
+                                 field 'SampleName' contains replicate labels (as numbers)
+ data_reg.fit                    fitted data points (reordered!)
+ options:                        options for multi-curve regression (see script replicate_regression)
+   with optional additional fields .prior_updating and .updating_factor</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>	[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]</li><li><a href="replicate_regression_normalise.html" class="code" title="function data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);">replicate_regression_normalise</a>	data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);</li><li><a href="../.././replicate_regression/utils/biotable_join_replicates.html" class="code" title="function [combined,collected] = biotable_join_replicates(data,p)">biotable_join_replicates</a>	[combined,collected] = biotable_join_replicates(data,p)</li><li><a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options,foptions)</a>
+0002 
+0003 <span class="comment">% [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Multicurve regression for omics data with multiple replicates, including prior updating</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% 'data_replicates' contains the replicate data sets as fields (all in biotable format, same form!!)</span>
+0008 <span class="comment">% The entries of the first field are used as unique identifiers</span>
+0009 <span class="comment">% The data entries are reordered in the combined data set.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% data_reg.average, data_reg.replicates,</span>
+0012 <span class="comment">% data_reg.central (struct arrays):   regression results</span>
+0013 <span class="comment">% statistics:                     additional information about the regression procedure</span>
+0014 <span class="comment">% data_reg.combined (struct arrays) : data structure from intermediate processing steps</span>
+0015 <span class="comment">%                                 field 'SampleName' contains replicate labels (as numbers)</span>
+0016 <span class="comment">% data_reg.fit                    fitted data points (reordered!)</span>
+0017 <span class="comment">% options:                        options for multi-curve regression (see script replicate_regression)</span>
+0018 <span class="comment">%   with optional additional fields .prior_updating and .updating_factor</span>
+0019 
+0020 <span class="comment">% data_collected (struct arrays): data structure from intermediate processing steps</span>
+0021 
+0022 <span class="comment">% -----------------------------------------------------------------</span>
+0023 
+0024 eval(<a href="../.././replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>(<span class="string">'options'</span>,<span class="string">'struct'</span>,<span class="string">'foptions'</span>,<span class="string">'struct'</span>));
+0025 foptions_default = struct(<span class="string">'postprocess_normalise'</span>,0,<span class="string">'run_crossvalidation'</span>,1,<span class="string">'update_prior_means'</span>,0);
+0026 foptions         = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(foptions_default,foptions);
+0027 
+0028 fn = fieldnames(data_replicates);
+0029 
+0030 data = {};
+0031 
+0032 <span class="keyword">for</span> it = 1:length(fn),
+0033   data{it} = data_replicates.(fn{it});
+0034 <span class="keyword">end</span>
+0035 
+0036 [data_combined, data_collected] = <a href="../.././replicate_regression/utils/biotable_join_replicates.html" class="code" title="function [combined,collected] = biotable_join_replicates(data,p)">biotable_join_replicates</a>(data, options);
+0037 
+0038 
+0039 <span class="comment">% -------------------------------------------------------------------------</span>
+0040 <span class="comment">% If option 'prior_updating' is set, run analysis prior_updating times and update the prior</span>
+0041 <span class="comment">% Revisit prior assumptions: update data error bars and priors and rerun estimation</span>
+0042 
+0043 run_updating = 0;
+0044 <span class="keyword">if</span> isfield(options,<span class="string">'prior_updating'</span>),
+0045   <span class="keyword">if</span> isfinite(options.prior_updating),
+0046     <span class="keyword">if</span> options.prior_updating&gt;0,
+0047       run_updating = 1;
+0048     <span class="keyword">end</span>
+0049   <span class="keyword">end</span>
+0050 <span class="keyword">end</span>
+0051 
+0052 <span class="keyword">if</span> run_updating,
+0053   my_options = options;  
+0054   tic;
+0055   <span class="keyword">for</span> it = 1:options.prior_updating,
+0056     display(sprintf(<span class="string">'Updating the priors: iteration %d\n'</span>,it));
+0057     my_options.verbose             = 0;
+0058     my_options.prior_updating      = nan;
+0059     my_options.run_crossvalidation = 0;
+0060     [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = <a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>(data_combined, my_options);
+0061     my_options = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(my_options, options_update);
+0062   <span class="keyword">end</span>    
+0063   time_for_prior_updating_total = toc;
+0064   time_for_prior_updating_per_loop = time_for_prior_updating_total/options.prior_updating;  
+0065 <span class="keyword">else</span>,
+0066   options_update = struct;  
+0067 <span class="keyword">end</span>
+0068   
+0069   
+0070 <span class="comment">% -------------------------------</span>
+0071 <span class="comment">% Do final replicate regression: build tables data_central and data_average</span>
+0072 <span class="comment">% and list of tables data_replicates,</span>
+0073 
+0074 my_options = <a href="../.././replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(options, options_update);
+0075 
+0076 tic
+0077   display(sprintf(<span class="string">'Running the final regression\n'</span>));
+0078 
+0079   [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = <a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>(data_combined, my_options);
+0080   
+0081   time_for_final_run = toc;
+0082 
+0083 <span class="keyword">if</span> options.run_crossvalidation,
+0084   data_pooled            = data_combined;
+0085   data_pooled.SampleName = repmat(data_pooled.SampleName(1),length(data_pooled.SampleName),1);
+0086 
+0087   display(sprintf(<span class="string">'Running regression with pooled data for crossvalidation\n'</span>));
+0088   [data_pooled_average, data_pooled_rep, data_pooled_central, data_pooled_crossvalidation ] = <a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>(data_pooled, options);
+0089   options_naive = options;
+0090   
+0091   options_naive.central_offset_width       = inf;
+0092   options_naive.central_first_mode_width   = inf;
+0093   options_naive.central_jump_width         = inf;
+0094   options_naive.deviation_offset_width     = inf;
+0095   options_naive.deviation_first_mode_width = inf;
+0096   options_naive.deviation_jump_width       = inf;
+0097 
+0098   display(sprintf(<span class="string">'Running regression with pooled data and flat prior for crossvalidation\n'</span>));
+0099   [data_naive_average, data_naive_rep, data_naive_central, data_naive_crossvalidation ] = <a href="replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>(data_pooled, options_naive);
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">% -------------------------------------------------------------------------</span>
+0103 <span class="comment">% prepare output</span>
+0104 
+0105 data_reg.average  = data_average;  
+0106 <span class="keyword">for</span> it = 1:length(fn),
+0107   data_reg.replicates.(fn{it}) = data_rep{it};
+0108 <span class="keyword">end</span>
+0109 data_reg.central    = data_central;
+0110 data_reg.statistics = statistics;
+0111 data_reg.combined   = data_combined;
+0112 data_reg.fit        = data_fit;
+0113 
+0114 <span class="keyword">if</span> options.run_crossvalidation,
+0115   data_reg.crossvalidation_average   = data_cross_average;
+0116   data_reg.crossvalidation_replicate = data_cross_rep;
+0117   data_reg.pooled_crossvalidation    = data_pooled_crossvalidation;
+0118   data_reg.naive_crossvalidation     = data_naive_crossvalidation;
+0119 <span class="keyword">end</span>
+0120 
+0121 
+0122 <span class="comment">% -------------------------------------------------------------------------</span>
+0123 <span class="comment">% add information about normalised curves and data</span>
+0124 
+0125 <span class="keyword">if</span> foptions.postprocess_normalise,
+0126   display(sprintf(<span class="string">'Running another regression for adjusted curves\n'</span>));
+0127   data_reg.adjusted = <a href="replicate_regression_normalise.html" class="code" title="function data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);">replicate_regression_normalise</a>(data_reg, options_complete,foptions.data_scale);
+0128 <span class="keyword">end</span>
+0129 
+0130 <span class="comment">% -------------------------------------------------------------------------</span>
+0131 
+0132 <span class="keyword">if</span> length(foptions.log_file),
+0133   cd(foptions.result_dir);
+0134   file = fopen(foptions.log_file,<span class="string">'w'</span>);
+0135   fprintf(file,<span class="string">'Time for prior updating total : %f s\n'</span>,time_for_prior_updating_total);
+0136   fprintf(file,<span class="string">'Time for prior updating per loop: %f s\n'</span>,time_for_prior_updating_per_loop);
+0137   fprintf(file,<span class="string">'Number of updating loops: %d\n'</span>,options.prior_updating);
+0138   fprintf(file,<span class="string">'Number of biological elements: %d\n'</span>,size(data_combined.DataMean,1));
+0139   fprintf(file,<span class="string">'Time for final run: %f s\n'</span>,time_for_final_run);
+0140   fprintf(file,<span class="string">'Time for final run per element: %f s\n'</span>,time_for_final_run/size(data_combined.DataMean,1));
+0141   fclose(file);
+0142 <span class="keyword">end</span>
+0143 
+0144 
+0145 <span class="comment">% ------------------------------------------------</span>
+0146 <span class="comment">% try to spot outliers based on crossvalidation:</span>
+0147 <span class="comment">% an upper percentile of absolute mismatches is counted as outliers</span>
+0148 
+0149 <span class="comment">% compare, for each data point, the leave-one out fit of the replicate curves</span>
+0150 <span class="comment">% to the actual data value and compute the mismatch</span>
+0151 <span class="comment">% deviation  = abs(data_reg.combined.DataMean-data_reg.crossvalidation_replicate.DataMean);</span>
+0152 
+0153 <span class="comment">% compare, for each data point, the leave-one out fit of the replicate curves</span>
+0154 <span class="comment">% to the normal (non-leave-one-out) fit and compute the mismatch</span>
+0155 
+0156 deviation  = abs(data_reg.crossvalidation_replicate.DataMean - data_reg.fit.DataMean);
+0157 qq         = quantile(deviation(:),1-foptions.mark_outliers_percentage);
+0158 data_reg.presumable_outliers = sparse(deviation&gt;qq);</pre></div>
+<hr><address>Generated on Sun 09-Nov-2014 11:01:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

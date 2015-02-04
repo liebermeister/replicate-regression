@@ -1,0 +1,22 @@
+data_dir	/home/wolfram/projekte/replicate_regression/proteome_data/hahne_salt_stress/data/
+result_dir	/home/wolfram/projekte/replicate_regression/proteome_data/hahne_salt_stress/results/
+graphics_dir	/home/wolfram/projekte/replicate_regression/proteome_data/hahne_salt_stress/graphics/cytosol
+data_file_matlab	hahne_salt_stress_cytosol_data.mat
+result_file_matlab	hahne_salt_stress_cytosol_result.mat
+graphics_file	hahne_salt_stress_cytosol_individual_tagD
+graphics_format	'eps'
+data_scale	absolute
+graphics_scale	log2
+run_crossvalidation	1
+postprocess_normalise	1
+%element_id	lalala
+element_name	tagD
+title_string	Cytosolic protein
+convenience_name	SubtiWiki_20090701	
+x_label	Time(min)
+y_label	log2 ratio (a.u.)
+plot_data	1
+plot_replicates	1
+plot_regression	1
+plot_all	0
+mark_outliers_percentage	0.05
