@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sbtab_table_load</title>
+  <meta name="keywords" content="sbtab_table_load">
+  <meta name="description" content="sbtab = sbtab_table_load(filename)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">utils</a> &gt; sbtab_table_load.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/utils&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>sbtab_table_load
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>sbtab = sbtab_table_load(filename)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function sbtab = sbtab_table_load(filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> sbtab = sbtab_table_load(filename)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="column.html" class="code" title="function x = column(x)">column</a>	transform a vector (row or column) into a column vector</li><li><a href="load_any_table.html" class="code" title="function result = load_any_table(filename,delimiter)">load_any_table</a>	list = load_any_table(filename)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression/replicate_regression/replicate_regression_load_data_table.html" class="code" title="function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)">replicate_regression_load_data_table</a>	[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sbtab = sbtab_table_load(filename)</a>
+0002 
+0003 <span class="comment">% sbtab = sbtab_table_load(filename)</span>
+0004 
+0005 my_table = <a href="load_any_table.html" class="code" title="function result = load_any_table(filename,delimiter)">load_any_table</a>(filename);
+0006 
+0007 attribute_line = {};
+0008 <span class="keyword">if</span> strcmp(<span class="string">'!!'</span>,my_table{1,1}(1:2)), 
+0009  attribute_line = my_table(1,:);
+0010  my_table       = my_table(2:<span class="keyword">end</span>,:);
+0011 <span class="keyword">end</span>
+0012 
+0013 rows        = struct;
+0014 ind_data    = [];
+0015 
+0016 <span class="keyword">if</span> length(my_table),
+0017   
+0018 <span class="keyword">while</span> strcmp(<span class="string">'!'</span>,my_table{2,1}(1)), 
+0019  row_header = my_table{2,1}(2:end);
+0020  row_rest   = [{[]},my_table(2,2:end)];
+0021  ind_data   = [ind_data, find(cellfun(<span class="string">'length'</span>,row_rest))];
+0022  my_table   = my_table([1,3:end],:);
+0023  rows       = setfield(rows,row_header,row_rest);
+0024 <span class="keyword">end</span>
+0025 
+0026 ind_rows = setdiff(unique(ind_data),1);
+0027 <a href="column.html" class="code" title="function x = column(x)">column</a> = struct;
+0028 column_names = {};
+0029 ind_column = [];
+0030 <span class="keyword">for</span> it = 1:size(my_table,2),
+0031   column_header = my_table{1,it};
+0032   <span class="keyword">if</span> strcmp(<span class="string">'!'</span>,column_header(1)),
+0033     column_header = column_header(2:end);
+0034     column_names = [column_names; {column_header}];
+0035     column_header = strrep(column_header,<span class="string">' '</span>,<span class="string">'_'</span>);
+0036     column_header = strrep(column_header,<span class="string">':'</span>,<span class="string">'_'</span>);
+0037     column_header = strrep(column_header,<span class="string">'.'</span>,<span class="string">'_'</span>);
+0038     ind_column = [ind_column it];
+0039     <a href="column.html" class="code" title="function x = column(x)">column</a> = setfield(<a href="column.html" class="code" title="function x = column(x)">column</a>,column_header,strtrim(my_table(2:<span class="keyword">end</span>,it)));
+0040   <span class="keyword">end</span>
+0041 <span class="keyword">end</span>
+0042 ind_data         = setdiff(ind_rows,ind_column);
+0043 data_headers     = my_table(1,ind_data);
+0044 data             = my_table(2:<span class="keyword">end</span>,ind_data);
+0045 
+0046 ind_uncontrolled = setdiff(1:size(my_table,2),[ind_column,ind_data]);
+0047 <span class="keyword">if</span> length(ind_uncontrolled),
+0048   uncontrolled_headers = my_table(1,ind_uncontrolled);
+0049   uncontrolled         = my_table(2:<span class="keyword">end</span>,ind_uncontrolled);
+0050 <span class="keyword">else</span>
+0051   uncontrolled_headers = [];
+0052   uncontrolled         = <span class="string">''</span>;
+0053   ind_uncontrolled = [];
+0054 <span class="keyword">end</span>
+0055 
+0056 <span class="keyword">end</span>
+0057 
+0058 fn = fieldnames(rows);
+0059 
+0060 data_attributes   = [];
+0061 column_attributes = [];
+0062 
+0063 <span class="keyword">for</span> it = 1:length(fn);
+0064   data_attributes.(fn{it})   = rows.(fn{it})(ind_data);
+0065   column_attributes.(fn{it}) = rows.(fn{it})(ind_column);
+0066 <span class="keyword">end</span>
+0067   
+0068 sbtab.filename          = filename;
+0069 sbtab.attributes        = attribute_line;
+0070 sbtab.rows              = rows;
+0071 sbtab.column.column_names = column_names;
+0072 sbtab.column.column     = <a href="column.html" class="code" title="function x = column(x)">column</a>;
+0073 sbtab.column.attributes = column_attributes;
+0074 sbtab.column.ind        = ind_column;
+0075 sbtab.data.headers      = data_headers;
+0076 sbtab.data.attributes   = data_attributes;
+0077 sbtab.data.data         = strtrim(data);
+0078 sbtab.data.ind          = ind_data;
+0079 sbtab.uncontrolled.headers = uncontrolled_headers;
+0080 sbtab.uncontrolled.data = strtrim(uncontrolled);
+0081 sbtab.uncontrolled.ind  = ind_uncontrolled;</pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

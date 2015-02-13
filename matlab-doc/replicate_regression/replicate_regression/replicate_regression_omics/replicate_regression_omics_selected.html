@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_omics_selected</title>
+  <meta name="keywords" content="replicate_regression_omics_selected">
+  <meta name="description" content="Script replicate_regression_omics_selected">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_omics</a> &gt; replicate_regression_omics_selected.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/replicate_regression_omics&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_omics_selected
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Script replicate_regression_omics_selected</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Script replicate_regression_omics_selected
+
+ Run replicate regression for a single protein, display results and save graphics files
+
+ A replicate regression for the entire omics data set must have been run in advance
+ (see script replicate_regression_omics_analysis)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>	</li><li><a href="../../.././replicate_regression/replicate_regression/utils/ca.html" class="code" title="function ca()">ca</a>	</li><li><a href="../../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../../.././replicate_regression/replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>	function [label,indices] = label_names(names,allnames, method)</li><li><a href="../../.././replicate_regression/replicate_regression/utils/load_options_table.html" class="code" title="function GreatBigOptions = load_options_table(tablefile,base_DIR)">load_options_table</a>	tablefile can be th ename of the table file</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression_omics.html" class="code" title="function replicate_regression_omics(data_file, foptions_file, base_directory, goptions_file)">replicate_regression_omics</a>	replicate_regression_omics(data_file, foptions_file, base_directory)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Script replicate_regression_omics_selected</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Run replicate regression for a single protein, display results and save graphics files</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% A replicate regression for the entire omics data set must have been run in advance</span>
+0006 <span class="comment">% (see script replicate_regression_omics_analysis)</span>
+0007 
+0008 <span class="comment">% Example options file:</span>
+0009 <span class="comment">% foptions_file = [replicate_regression_PATH_NAME '/options_hahne_salt_stress_tagD.csv'];</span>
+0010 
+0011 
+0012 <span class="comment">% ----------------------------------------------------------------------------------------</span>
+0013 
+0014 foptions_default = struct(<span class="string">'plot_data'</span>, 1,<span class="string">'plot_regression'</span>,1,<span class="string">'plot_replicates'</span>, 1,<span class="string">'plot_all'</span>,0,<span class="keyword">...</span>
+0015                           <span class="string">'graphics_format'</span>, <span class="string">'png'</span>, <span class="keyword">...</span>
+0016                           <span class="string">'graphics_scale'</span>,<span class="string">'absolute'</span>,<span class="string">'title_string'</span>,[],<span class="string">'delimiter_symbol'</span>,<span class="string">'|'</span>,<span class="keyword">...</span>
+0017                           <span class="string">'x_label'</span>,<span class="string">'Time'</span>,<span class="string">'y_label'</span>,<span class="string">''</span>,<span class="string">'convenience_name'</span>,[],<span class="string">'postprocess_normalise'</span>,0,<span class="keyword">...</span>
+0018                           <span class="string">'log_transformation'</span>,<span class="string">'arithmetic'</span>,<span class="string">'name_print_capital'</span>,0);
+0019 
+0020 foptions = <a href="../../.././replicate_regression/replicate_regression/utils/load_options_table.html" class="code" title="function GreatBigOptions = load_options_table(tablefile,base_DIR)">load_options_table</a>(foptions_file);
+0021 foptions = <a href="../../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(foptions_default,foptions);
+0022 
+0023 cd(foptions.data_dir);
+0024 load(foptions.data_file_matlab);
+0025 
+0026 cd(foptions.result_dir);
+0027 load(foptions.result_file_matlab);
+0028 
+0029 cd(foptions.graphics_dir);
+0030 <a href="../../.././replicate_regression/replicate_regression/utils/ca.html" class="code" title="function ca()">ca</a>;
+0031 
+0032 <span class="comment">% ----------------------------------------------------------------------------------------</span>
+0033 
+0034 replicates    = fieldnames(data_replicates);
+0035 n_rep         = length(replicates);
+0036 dum           = fieldnames(data_replicates.(replicates{1}));
+0037 element_names = getfield(data_reg.combined,(dum{1}));
+0038 
+0039 <span class="keyword">if</span> isfield(foptions,<span class="string">'element_id'</span>),
+0040   idstring = foptions.element_id; 
+0041   <span class="keyword">if</span> isnumeric(idstring), idstring = num2str(idstring); <span class="keyword">end</span>
+0042   id_list  = strsplit(foptions.delimiter_symbol,idstring);
+0043   <span class="keyword">if</span> length(foptions.convenience_name),
+0044     itt       = <a href="../../.././replicate_regression/replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(foptions.convenience_name,dum);
+0045     ll        = <a href="../../.././replicate_regression/replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(id_list,data_reg.combined.(dum{itt}));
+0046     name_list = data_reg.combined.(foptions.convenience_name)(ll);
+0047   <span class="keyword">else</span>, 
+0048     name_list = id_list;
+0049   <span class="keyword">end</span>
+0050 <span class="keyword">else</span>,
+0051   namestring = foptions.element_name;
+0052   name_list  = strsplit(foptions.delimiter_symbol,namestring)';
+0053   allnames = data_reg.combined.(foptions.convenience_name);
+0054   <span class="comment">%% next two lines are just for safety (possibly missing names)</span>
+0055   ind_empty = find(cellfun(<span class="string">'isempty'</span>,allnames)); 
+0056   allnames(ind_empty) = repmat({<span class="string">''</span>},length(ind_empty),1);
+0057   ll       = <a href="../../.././replicate_regression/replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(name_list,allnames);
+0058   <span class="keyword">if</span> find(ll==0), 
+0059     name_list(find(ll==0))
+0060     error(<span class="string">'Unknown element label found'</span>);
+0061   <span class="keyword">end</span>
+0062   id_list  = data_reg.combined.(dum{1})(ll);
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">if</span> foptions.name_print_capital,
+0066  <span class="keyword">for</span> it = 1:length(name_list),
+0067    name_list{it} = [upper(name_list{it}(1)) name_list{it}(2:end)];
+0068  <span class="keyword">end</span>
+0069 <span class="keyword">end</span>
+0070 
+0071 
+0072 <span class="comment">% ----------------------------------------------------------------------------------------</span>
+0073 
+0074 colors  = {[0 0.3 1],[1 0.2 .2],[.9 .6 0],[0.3 1 0],[1 0.3 1]};
+0075 
+0076 clear gp; 
+0077 gp.fignum          = 1; 
+0078 gp.subplot         = []; 
+0079 gp.replicate_names = fieldnames(data_reg.replicates); 
+0080 gp.fontsize        = 28; 
+0081 gp.x_label         = foptions.x_label; 
+0082 gp.y_label         = foptions.y_label; 
+0083 gp.no_legend             = 1;
+0084 gp.print_title     = 0;
+0085 gp.convenience_name = foptions.convenience_name; 
+0086 <span class="keyword">if</span> strcmp(foptions.graphics_scale,<span class="string">'log2'</span>),  
+0087   <span class="keyword">if</span> strcmp(foptions.data_scale,<span class="string">'absolute'</span>), 
+0088     gp.show_log2 = 1;
+0089   <span class="keyword">else</span>
+0090     gp.logarithmic_data = 1;
+0091   <span class="keyword">end</span>; 
+0092 <span class="keyword">end</span>
+0093 gp.image_format    = foptions.graphics_format;
+0094 
+0095 <span class="comment">% ----------------------------------------------------------------</span>
+0096 
+0097 ind_element = <a href="../../.././replicate_regression/replicate_regression/utils/label_names.html" class="code" title="function [label,indices] = label_names(names,allnames,method)">label_names</a>(id_list,element_names);
+0098 
+0099 
+0100 <span class="comment">%% show pure data (direct plot)</span>
+0101   
+0102 <span class="keyword">if</span> foptions.plot_data,
+0103   <span class="keyword">if</span> length(data_pointwise_average),
+0104     gp.data_lines      = 1;
+0105     gp.flag_only_data  = 0;
+0106     gp.flag_omit_replicates = 1;
+0107     gp.title_string    = [foptions.title_string <span class="string">' data'</span>];
+0108     <a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>(data_reg.combined, data_pointwise_average, data_reg.replicates, gp, ind_element, [ foptions.graphics_file <span class="string">'_data'</span>]);
+0109   <span class="keyword">end</span>
+0110 <span class="keyword">end</span>
+0111 
+0112   
+0113 <span class="comment">%%  show regression with replicate curves</span>
+0114 
+0115 <span class="keyword">if</span> foptions.plot_replicates,
+0116   gp.fignum          = 2; 
+0117   gp.data_lines      = 0;
+0118   gp.flag_only_data  = 0;
+0119   gp.flag_omit_replicates = 0;
+0120   gp.title_string    = [foptions.title_string <span class="string">' replicates'</span>];
+0121   <a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>(data_reg.combined, data_reg.average, data_reg.replicates, gp, ind_element, [ foptions.graphics_file <span class="string">'_replicates'</span>]);
+0122 <span class="keyword">end</span>
+0123 
+0124 
+0125 <span class="comment">%%  show regression without replicate curves</span>
+0126 
+0127 <span class="keyword">if</span> foptions.plot_regression,
+0128   gp.fignum                = 3; 
+0129   gp.flag_omit_replicates  = 1;
+0130   gp.title_string    = [foptions.title_string <span class="string">' regression'</span>];
+0131   <a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>(data_reg.combined, data_reg.average, data_reg.replicates, gp, ind_element, [ foptions.graphics_file <span class="string">'_regression'</span>]);
+0132 
+0133   <span class="keyword">if</span> foptions.postprocess_normalise,
+0134     gp.fignum                = 4; 
+0135     gp.data_lines            = 1;
+0136     gp.flag_omit_replicates  = 1;
+0137     gp.title_string    = [foptions.title_string <span class="string">' normalised'</span>];
+0138     <a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>(data_reg.adjusted.combined, data_reg.adjusted.average, data_reg.adjusted.replicates, gp, ind_element, [ foptions.graphics_file <span class="string">'_normalised'</span>]);
+0139   <span class="keyword">end</span>
+0140 
+0141 <span class="keyword">end</span>
+0142 
+0143 
+0144 <span class="comment">%%  show all elements together (only data)</span>
+0145 
+0146 <span class="keyword">if</span> foptions.plot_all,
+0147    
+0148   figure(5); clf; h = []; set(gca,<span class="string">'FontSize'</span>,12);
+0149   cm = jet(length(ind_element));
+0150   hold on;
+0151   <span class="keyword">for</span> it = 1:length(ind_element),
+0152     <span class="comment">%% Adjusted data</span>
+0153     <span class="comment">%%h(it) = plot(data_reg.adjusted.combined.SampleTime',data_reg.adjusted.combined.DataMean(ind_element(it),:),'o','Color',cm(it,:));</span>
+0154     <span class="comment">%%plot(data_reg.adjusted.average.SampleTime',data_reg.adjusted.average.DataMean(ind_element(it),:),'-','Color',cm(it,:));</span>
+0155     <span class="comment">%% Non-adjusted data pointwise</span>
+0156     <span class="comment">%% h(it) = plot(data_pointwise_average.SampleTime',data_pointwise_average.DataMean(ind_element(it),:),'o','Color',cm(it,:));</span>
+0157     <span class="comment">%%plot(data_reg.average.SampleTime',data_reg.average.DataMean(ind_element(it),:),'-','Color',cm(it,:));</span>
+0158     <span class="comment">%% Non-adjusted data</span>
+0159     h(it) = plot(data_reg.combined.SampleTime',data_reg.combined.DataMean(ind_element(it),:),<span class="string">'o'</span>,<span class="string">'Color'</span>,cm(it,:));
+0160     plot(data_reg.average.SampleTime',data_reg.average.DataMean(ind_element(it),:),<span class="string">'-'</span>,<span class="string">'Color'</span>,cm(it,:));
+0161   <span class="keyword">end</span>
+0162   legend(h,name_list);
+0163   xlabel(foptions.x_label);
+0164   ylabel(<span class="string">'Protein level (a.u.)'</span>);
+0165   title(foptions.title_string);
+0166   cd( foptions.graphics_dir);
+0167   <span class="keyword">switch</span> gp.image_format,
+0168     <span class="keyword">case</span> <span class="string">'png'</span>, print([foptions.graphics_file <span class="string">'.png'</span>],<span class="string">'-f5'</span>,<span class="string">'-dpng'</span>);
+0169     <span class="keyword">case</span> <span class="string">'eps'</span>, print([foptions.graphics_file <span class="string">'.eps'</span>],<span class="string">'-f5'</span>,<span class="string">'-depsc'</span>);
+0170   <span class="keyword">end</span>
+0171 
+0172   <span class="keyword">if</span> isfield(foptions,<span class="string">'mark_outliers_percentage'</span>),
+0173     <span class="comment">%% deviation between crossvalidated and normal fit (replicate curves)</span>
+0174     deviation  = abs(data_reg.crossvalidation_replicate.DataMean - data_reg.fit.DataMean);
+0175     <span class="comment">%% deviation between crossvalidated fit and data point (replicate curves)</span>
+0176     <span class="comment">%%deviation  = abs(data_reg.crossvalidation_replicate.DataMean - data_reg.combined.DataMean);</span>
+0177     qq         = quantile(deviation(:),1-foptions.mark_outliers_percentage);
+0178     presumable_outliers = sparse(deviation&gt;qq);  
+0179   <span class="keyword">else</span>
+0180     presumable_outliers = data_reg.presumable_outliers;
+0181   <span class="keyword">end</span>
+0182   
+0183   figure(6); clf; 
+0184   cd(foptions.graphics_dir);
+0185   clear gp; 
+0186   gp.fignum             = 6;
+0187   gp.show_errorbars     = 1;
+0188   gp.subplot            = [4,4]; 
+0189   gp.log_transformation = foptions.log_transformation; 
+0190   gp.replicate_names    = fieldnames(data_reg.replicates); 
+0191   gp.fontsize           = 10;
+0192   gp.image_format       = foptions.graphics_format;
+0193   gp.convenience_name   = foptions.convenience_name;
+0194   gp.name_print_capital = foptions.name_print_capital;
+0195   <span class="keyword">switch</span> foptions.data_scale,
+0196     <span class="keyword">case</span> <span class="string">'absolute'</span>, gp.logarithmic_data = 0; 
+0197     <span class="keyword">otherwise</span>,       gp.logarithmic_data = 1; 
+0198   <span class="keyword">end</span> 
+0199   <span class="keyword">switch</span> foptions.graphics_scale,
+0200     <span class="keyword">case</span> <span class="string">'log2'</span>,   gp.show_log2 = 1;
+0201     <span class="keyword">case</span> <span class="string">'absolute'</span>, gp.show_log2 = 0;
+0202     <span class="keyword">otherwise</span>,     gp.show_log2 = 0;
+0203   <span class="keyword">end</span>;
+0204   gp.show_bands         = 0;
+0205   gp.mark_data          = presumable_outliers;
+0206   <a href="../../.././replicate_regression/replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>(data_reg.combined, data_reg.average, data_reg.replicates, gp, ind_element,[foptions.graphics_file <span class="string">'_panels'</span>]);
+0207 <span class="keyword">end</span>
+0208 
+0209 
+0210 <span class="comment">% find the curve that is most distant from average curve:</span>
+0211 
+0212 [dum, extremist] = max(sum([ data_reg.average.DataMean(ind_element,:) - repmat(mean(data_reg.average.DataMean(ind_element,:)), length(ind_element),1)].^2,2));
+0213 display(sprintf(<span class="string">'Outermost item: %s'</span>,name_list{extremist}))</pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

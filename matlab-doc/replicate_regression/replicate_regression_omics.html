@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_omics</title>
+  <meta name="keywords" content="replicate_regression_omics">
+  <meta name="description" content="replicate_regression_omics(data_file, foptions_file, base_directory)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; replicate_regression_omics.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_omics
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>replicate_regression_omics(data_file, foptions_file, base_directory)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function replicate_regression_omics(data_file, foptions_file, base_directory, goptions_file) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> replicate_regression_omics(data_file, foptions_file, base_directory)
+
+ Bayesian replicate regression for omics data
+
+ FUNCTION ARGUMENTS:
+
+  data_file:                omics data file (full directory path)
+
+  foptions_file:            table file containing the options (full directory path)
+
+  base_directory:           directory name for results (full directory path)
+
+  goptions_file (optional): table file containing the options for 
+                            single protein graphics (full directory path)
+ 
+ OUTPUT: Data and graphics are written to files
+
+ --------------------------------------------------------------------------------
+ Format of data file (tab-separated text, see examples):
+
+   Line 1: Headers
+           Headers of protein names columns (e.g., !BSUnumber, !BGnumber, !GeneName, !UniprotID),
+           followed by sample names (as headers of data columns)
+   Line 2: Time points
+           first column: !Time       data columns: time points (numbers)
+   Line 3: Replicate numbers
+           first column: !Replicate  data columns: replicate names
+   Line 4 (optional): !ValueType ('Value', 'Mean', or 'Std')
+   Further lines: numerical data
+
+
+ --------------------------------------------------------------------------------
+ Format of options file (tab-separated text, see examples):
+   Each line contains one attribute:
+     first column: attribute name
+     second column: attribute value (string or number)
+     all further columns are ignored
+
+   Lines starting with the '%' character are ignored (can be used for comments)
+   The attribute 'options_file' allows to declare another options file containing default options 
+   The attribute 'data_file_csv' contains the name of the data file
+
+
+ --------------------------------------------------------------------------------
+ Attributes in options file (for replicate_regression_omics_analysis)
+
+   data_dir                directory name for data files
+   result_dir              directory name for result files
+   graphics_dir            directory name for graphics
+   data_file_csv           filename for data file (tsv format, see examples)
+   data_file_matlab        filename for matlab data file (written during the analysis)
+   options_file            filename for default options file (tsv format)
+   options_out_csv         filename for completed options file (tsv format, written during analysis)
+   translation_table_file  filename for ID mapping table (see example)
+   result_file_matlab      filename for 
+   result_file_csv         filename for        hahne_salt_stress_cytosol_result.tsv
+   result_file_zip         filename for        hahne_salt_stress_result.zip
+   graphics_file           file basename  for graphics
+   data_time_unit          time unit ('min')
+
+   data_scale              'absolute' or 'log2' (also 'ln','log','log10','log2 ratio'; these are all treated like 'log2');
+   data_min_num_replicates minimal number of valid replicates (genes with less valid replicates are discarded; default 1)
+  For &quot;absolute&quot; data:
+    data_outliers_upper     upper threshold; points above are outliers (increase std dev by factor of 3)
+    data_outliers_lower     lower threshold; points below are outliers (increase std dev by factor of 3)
+    data_std_relative       default for relative standard deviation
+    data_std_minimal        minimal standard deviation
+  For logarithmic data ( 'log2', 'ln','log','log10','log2 ratio')
+    data_std_log            default for standard deviation (on log scale)
+    data_outliers_threshold threshold for data values (on chosen log scale) to be counted as outlier
+                            (check | [data value] - [median for this gene &amp; replicate] | )
+    data_std_log_outlier    standard deviation (on log scale) for data counted as outliers
+
+   data_min_data_points    minimal number of data points required in the analysis (default 3)
+                           at least one replicate has to reach this number, points are times t&lt;0 do not count
+                           replicates with less data points are ignored
+   convert_to_logarithm    convert (nonlogarithmic) data to logarithms for replicate regression (Boolean)
+   log_transformation      type of transformation 
+                           'arithmetic': data=mean values and plotting on absolute scale
+                           'geometric' : data = median values and plotting on log scale (but data on absolute scale)
+   ignore_std_deviations   Boolean, ignore standard deviations given in data
+   fixed_prior             keeping the prior fixed? (Boolean, default 0)
+   prior_updating          number of prior updating iterations (default 10)
+   updating_factor         updating factor, default 1.1
+   update_prior_means      change parameter means from 0 to posterior means while updating? default 0
+   t_smooth                time constant defining how prior widths depend on the frequency
+   options_start_value     fixed starting value -&gt; to be inserted into options as options.start_value
+   options_start_at_t      Starting time point for changes (after constant behaviour) to be inserted into options as options.start_at_t
+   options_constant_before_start Boolean (keep curves constant before starting time) to be inserted into options as options.constant_before_start
+   regression_t_interp     time points for regression (optional)
+   regression_tmin         start time for regression (optional)
+   regression_tmax         end time for regression (optional)
+   crossvalidation         run crossvalidation? (Boolean, default 0)
+   postprocess_normalise   Boolean, default 1
+   graphics_individual     file basename (used in script replicate_regression_omics_selected'
+   graphics_scale          default 'log2', 'linear'
+   graphics_format         'eps', 'png' (for technical reasons, 'eps' needs to be written in single quotes)
+   convenience_name        type of protein names to be used in graphics (default 'SubtiWiki_20090701')
+   normalise_by_median     (Boolean, default TRUE)
+   mark_outliers_percentage percentage of data points to be marked as outliers based on crossvalidation error
+
+ Additional attributes in options file for individual graphics 
+   (function 'replicate_regression_omics_selected')
+
+   graphics_scale          'log2','linear'
+   postprocess_normalise   1
+   element_id              id (or list, selected by |)
+   element_name            name (or list, selected by |)
+   delimiter_symbol        symbol for delimiting list of elements (in element_id, element_name)
+   title_string            title for graphics
+   x_label                 x label for graphics
+   y_label                 y label for graphics
+   plot_data               produce plot for data (single element)
+   plot_replicates         produce plot with replicates (single element)
+   plot_regression         produce plot for regression curves (single element)
+   plot_all                produce joint plots for all elements</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href=".././replicate_regression/replicate_regression/replicate_regression_omics/replicate_regression_omics_analysis.html" class="code" title="">replicate_regression_omics_analysis</a>	Script replicate_regression_omics_analysis</li><li><a href=".././replicate_regression/replicate_regression/replicate_regression_omics/replicate_regression_omics_selected.html" class="code" title="">replicate_regression_omics_selected</a>	Script replicate_regression_omics_selected</li><li><a href=".././replicate_regression/replicate_regression/utils/ca.html" class="code" title="function ca()">ca</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function replicate_regression_omics(data_file, foptions_file, base_directory, goptions_file)</a>
+0002 
+0003 <span class="comment">% replicate_regression_omics(data_file, foptions_file, base_directory)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Bayesian replicate regression for omics data</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% FUNCTION ARGUMENTS:</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  data_file:                omics data file (full directory path)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  foptions_file:            table file containing the options (full directory path)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  base_directory:           directory name for results (full directory path)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  goptions_file (optional): table file containing the options for</span>
+0016 <span class="comment">%                            single protein graphics (full directory path)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% OUTPUT: Data and graphics are written to files</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% --------------------------------------------------------------------------------</span>
+0021 <span class="comment">% Format of data file (tab-separated text, see examples):</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   Line 1: Headers</span>
+0024 <span class="comment">%           Headers of protein names columns (e.g., !BSUnumber, !BGnumber, !GeneName, !UniprotID),</span>
+0025 <span class="comment">%           followed by sample names (as headers of data columns)</span>
+0026 <span class="comment">%   Line 2: Time points</span>
+0027 <span class="comment">%           first column: !Time       data columns: time points (numbers)</span>
+0028 <span class="comment">%   Line 3: Replicate numbers</span>
+0029 <span class="comment">%           first column: !Replicate  data columns: replicate names</span>
+0030 <span class="comment">%   Line 4 (optional): !ValueType ('Value', 'Mean', or 'Std')</span>
+0031 <span class="comment">%   Further lines: numerical data</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% --------------------------------------------------------------------------------</span>
+0035 <span class="comment">% Format of options file (tab-separated text, see examples):</span>
+0036 <span class="comment">%   Each line contains one attribute:</span>
+0037 <span class="comment">%     first column: attribute name</span>
+0038 <span class="comment">%     second column: attribute value (string or number)</span>
+0039 <span class="comment">%     all further columns are ignored</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%   Lines starting with the '%' character are ignored (can be used for comments)</span>
+0042 <span class="comment">%   The attribute 'options_file' allows to declare another options file containing default options</span>
+0043 <span class="comment">%   The attribute 'data_file_csv' contains the name of the data file</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% --------------------------------------------------------------------------------</span>
+0047 <span class="comment">% Attributes in options file (for replicate_regression_omics_analysis)</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%   data_dir                directory name for data files</span>
+0050 <span class="comment">%   result_dir              directory name for result files</span>
+0051 <span class="comment">%   graphics_dir            directory name for graphics</span>
+0052 <span class="comment">%   data_file_csv           filename for data file (tsv format, see examples)</span>
+0053 <span class="comment">%   data_file_matlab        filename for matlab data file (written during the analysis)</span>
+0054 <span class="comment">%   options_file            filename for default options file (tsv format)</span>
+0055 <span class="comment">%   options_out_csv         filename for completed options file (tsv format, written during analysis)</span>
+0056 <span class="comment">%   translation_table_file  filename for ID mapping table (see example)</span>
+0057 <span class="comment">%   result_file_matlab      filename for</span>
+0058 <span class="comment">%   result_file_csv         filename for        hahne_salt_stress_cytosol_result.tsv</span>
+0059 <span class="comment">%   result_file_zip         filename for        hahne_salt_stress_result.zip</span>
+0060 <span class="comment">%   graphics_file           file basename  for graphics</span>
+0061 <span class="comment">%   data_time_unit          time unit ('min')</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%   data_scale              'absolute' or 'log2' (also 'ln','log','log10','log2 ratio'; these are all treated like 'log2');</span>
+0064 <span class="comment">%   data_min_num_replicates minimal number of valid replicates (genes with less valid replicates are discarded; default 1)</span>
+0065 <span class="comment">%  For &quot;absolute&quot; data:</span>
+0066 <span class="comment">%    data_outliers_upper     upper threshold; points above are outliers (increase std dev by factor of 3)</span>
+0067 <span class="comment">%    data_outliers_lower     lower threshold; points below are outliers (increase std dev by factor of 3)</span>
+0068 <span class="comment">%    data_std_relative       default for relative standard deviation</span>
+0069 <span class="comment">%    data_std_minimal        minimal standard deviation</span>
+0070 <span class="comment">%  For logarithmic data ( 'log2', 'ln','log','log10','log2 ratio')</span>
+0071 <span class="comment">%    data_std_log            default for standard deviation (on log scale)</span>
+0072 <span class="comment">%    data_outliers_threshold threshold for data values (on chosen log scale) to be counted as outlier</span>
+0073 <span class="comment">%                            (check | [data value] - [median for this gene &amp; replicate] | )</span>
+0074 <span class="comment">%    data_std_log_outlier    standard deviation (on log scale) for data counted as outliers</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">%   data_min_data_points    minimal number of data points required in the analysis (default 3)</span>
+0077 <span class="comment">%                           at least one replicate has to reach this number, points are times t&lt;0 do not count</span>
+0078 <span class="comment">%                           replicates with less data points are ignored</span>
+0079 <span class="comment">%   convert_to_logarithm    convert (nonlogarithmic) data to logarithms for replicate regression (Boolean)</span>
+0080 <span class="comment">%   log_transformation      type of transformation</span>
+0081 <span class="comment">%                           'arithmetic': data=mean values and plotting on absolute scale</span>
+0082 <span class="comment">%                           'geometric' : data = median values and plotting on log scale (but data on absolute scale)</span>
+0083 <span class="comment">%   ignore_std_deviations   Boolean, ignore standard deviations given in data</span>
+0084 <span class="comment">%   fixed_prior             keeping the prior fixed? (Boolean, default 0)</span>
+0085 <span class="comment">%   prior_updating          number of prior updating iterations (default 10)</span>
+0086 <span class="comment">%   updating_factor         updating factor, default 1.1</span>
+0087 <span class="comment">%   update_prior_means      change parameter means from 0 to posterior means while updating? default 0</span>
+0088 <span class="comment">%   t_smooth                time constant defining how prior widths depend on the frequency</span>
+0089 <span class="comment">%   options_start_value     fixed starting value -&gt; to be inserted into options as options.start_value</span>
+0090 <span class="comment">%   options_start_at_t      Starting time point for changes (after constant behaviour) to be inserted into options as options.start_at_t</span>
+0091 <span class="comment">%   options_constant_before_start Boolean (keep curves constant before starting time) to be inserted into options as options.constant_before_start</span>
+0092 <span class="comment">%   regression_t_interp     time points for regression (optional)</span>
+0093 <span class="comment">%   regression_tmin         start time for regression (optional)</span>
+0094 <span class="comment">%   regression_tmax         end time for regression (optional)</span>
+0095 <span class="comment">%   crossvalidation         run crossvalidation? (Boolean, default 0)</span>
+0096 <span class="comment">%   postprocess_normalise   Boolean, default 1</span>
+0097 <span class="comment">%   graphics_individual     file basename (used in script replicate_regression_omics_selected'</span>
+0098 <span class="comment">%   graphics_scale          default 'log2', 'linear'</span>
+0099 <span class="comment">%   graphics_format         'eps', 'png' (for technical reasons, 'eps' needs to be written in single quotes)</span>
+0100 <span class="comment">%   convenience_name        type of protein names to be used in graphics (default 'SubtiWiki_20090701')</span>
+0101 <span class="comment">%   normalise_by_median     (Boolean, default TRUE)</span>
+0102 <span class="comment">%   mark_outliers_percentage percentage of data points to be marked as outliers based on crossvalidation error</span>
+0103 <span class="comment">%</span>
+0104 <span class="comment">% Additional attributes in options file for individual graphics</span>
+0105 <span class="comment">%   (function 'replicate_regression_omics_selected')</span>
+0106 <span class="comment">%</span>
+0107 <span class="comment">%   graphics_scale          'log2','linear'</span>
+0108 <span class="comment">%   postprocess_normalise   1</span>
+0109 <span class="comment">%   element_id              id (or list, selected by |)</span>
+0110 <span class="comment">%   element_name            name (or list, selected by |)</span>
+0111 <span class="comment">%   delimiter_symbol        symbol for delimiting list of elements (in element_id, element_name)</span>
+0112 <span class="comment">%   title_string            title for graphics</span>
+0113 <span class="comment">%   x_label                 x label for graphics</span>
+0114 <span class="comment">%   y_label                 y label for graphics</span>
+0115 <span class="comment">%   plot_data               produce plot for data (single element)</span>
+0116 <span class="comment">%   plot_replicates         produce plot with replicates (single element)</span>
+0117 <span class="comment">%   plot_regression         produce plot for regression curves (single element)</span>
+0118 <span class="comment">%   plot_all                produce joint plots for all elements</span>
+0119 
+0120 foptions.data_file_csv = data_file;
+0121 
+0122 <a href=".././replicate_regression/replicate_regression/replicate_regression_omics/replicate_regression_omics_analysis.html" class="code" title="">replicate_regression_omics_analysis</a>;
+0123 
+0124 <span class="keyword">if</span> exist(<span class="string">'goptions_file'</span>,<span class="string">'var'</span>),
+0125   foptions_file          = goptions_file;
+0126   <a href=".././replicate_regression/replicate_regression/replicate_regression_omics/replicate_regression_omics_selected.html" class="code" title="">replicate_regression_omics_selected</a>;
+0127 <span class="keyword">end</span>
+0128 
+0129 <a href=".././replicate_regression/replicate_regression/utils/ca.html" class="code" title="function ca()">ca</a>;</pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

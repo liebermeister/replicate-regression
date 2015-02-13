@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_set_options</title>
+  <meta name="keywords" content="replicate_regression_set_options">
+  <meta name="description" content="options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; replicate_regression_set_options.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/replicate_regression&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_set_options
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>	transform a vector (row or column) into a column vector</li><li><a href="../../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression.html" class="code" title="function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)">replicate_regression</a>	[result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</a>
+0002 
+0003 <span class="comment">% options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</span>
+0004 
+0005 <span class="keyword">if</span> length(varargin{1})==1,
+0006   options = varargin{1}{1};
+0007 <span class="keyword">else</span>,
+0008  <span class="keyword">if</span> mod(length(varargin),2) ==1, 
+0009   options = varargin{1}{end};
+0010  <span class="keyword">else</span>,
+0011   options = struct;
+0012  <span class="keyword">end</span>
+0013  <span class="keyword">for</span> it = 1:floor(length(varargin)/2),
+0014    options = setfield(options,varargin{2*it-1},varargin{2*it});  
+0015  <span class="keyword">end</span>
+0016 <span class="keyword">end</span>
+0017 
+0018 <span class="keyword">if</span> ~fix_parameters, 
+0019 
+0020 <span class="comment">%% ----------------------------------------------------</span>
+0021 <span class="comment">%% set options (in structure 'options')</span>
+0022 
+0023   
+0024 options = <a href="../../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>(options_default,options);
+0025   
+0026 <span class="comment">%% --- insert dummy values for missing standard deviations</span>
+0027   
+0028 <span class="keyword">if</span> find(isnan(sigma(find(isfinite(y))))), 
+0029   warning(<span class="string">'Standard deviations missing.'</span>);
+0030   std_insert = nanmean(<a href="../../.././replicate_regression/replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>(sigma));
+0031   <span class="keyword">if</span> isfinite(std_insert), 
+0032     <span class="keyword">if</span> options.verbose, 
+0033      display(<span class="string">'Replacing them by mean standard deviation'</span>);  
+0034     <span class="keyword">end</span>
+0035   <span class="keyword">else</span>, 
+0036     std_insert = options.insert_std;
+0037     <span class="keyword">if</span> options.verbose, 
+0038      display(sprintf(<span class="string">'Replacing them by values of %f'</span>,std_insert)); 
+0039     <span class="keyword">end</span>
+0040   <span class="keyword">end</span>
+0041     sigma(isnan(sigma)) = std_insert;
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="keyword">if</span> isfinite(options.set_std)
+0045   sigma = options.insert_std * ones(size(sigma));
+0046   <span class="keyword">if</span> options.verbose, 
+0047     display(sprintf(<span class="string">'Replacing all data standard deviation by values of %f'</span>,options.set_std)); 
+0048   <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">%% ----------------------------------------------------</span>
+0052 <span class="comment">%% make options complete and consistent</span>
+0053 <span class="comment">%% --------------------------------------------------------</span>
+0054 
+0055 
+0056 <span class="comment">%% --- logaritmic values</span>
+0057   
+0058 <span class="keyword">if</span> options.is_logarithmic==1, options.convert_to_logarithm = 0; <span class="keyword">end</span>
+0059 
+0060 <span class="keyword">if</span> options.convert_to_logarithm ==1,
+0061   <span class="keyword">if</span> length(find(y&lt;0)) + (options.start_value&lt;=0),
+0062     warning(<span class="string">'Negative value encountered. Transformation to logarithms is not possible'</span>); 
+0063     options.convert_to_logarithm = 0;
+0064   <span class="keyword">end</span>
+0065 <span class="keyword">end</span>
+0066 
+0067 
+0068 <span class="comment">%% --- kind of basis functions</span>
+0069 
+0070 <span class="keyword">if</span> isfinite(options.start_value),
+0071   options.shift_data           = <span class="string">'fixed_start_value'</span>;
+0072   options.shift_value          = options.start_value;
+0073   options.use_offset           = 0;
+0074   options.basis                = <span class="string">'sin_half'</span>;
+0075   <span class="keyword">if</span> options.verbose, 
+0076     display(<span class="string">'Using fixed start value and sin(pi/2 t/T) basis functions'</span>); 
+0077   <span class="keyword">end</span>
+0078 <span class="keyword">end</span>
+0079 
+0080 <span class="comment">%% --- check and correct the number of components</span>
+0081 
+0082 <span class="keyword">if</span> length(options.central_mode_width), 
+0083   <span class="keyword">if</span> size(options.central_mode_width) ~= size(options.deviation_mode_width), 
+0084     error(<span class="string">'Prior width vectors have inconsistent lengths'</span>);
+0085   <span class="keyword">else</span>,
+0086     options.n_comp = length(options.central_mode_width);
+0087   <span class="keyword">end</span>
+0088   <span class="keyword">if</span> strcmp(options.basis,<span class="string">'cos+sin'</span>), options.n_comp = ceil(options.n_comp/2); <span class="keyword">end</span>
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="comment">%% --- consider minimal / maximal number of components</span>
+0092   
+0093 <span class="keyword">if</span> options.n_comp &lt; options.n_comp_min, options.n_comp_min = options.n_comp; <span class="keyword">end</span>
+0094 <span class="keyword">if</span> options.n_comp &gt; options.n_comp_max, options.n_comp_max = options.n_comp; <span class="keyword">end</span>
+0095   
+0096 <span class="keyword">if</span> ~length(options.central_mode_width),
+0097   
+0098     <span class="comment">%% decreasing according to temporal relaxation (see article)</span>
+0099     <span class="keyword">switch</span> options.basis, 
+0100       <span class="keyword">case</span> {<span class="string">'polynomial'</span>,<span class="string">'exp'</span>}, error(<span class="string">'Prior widths cannot be computed automatically for this set of basis functions'</span>); 
+0101     <span class="keyword">end</span>       
+0102     
+0103     T     = max(t);
+0104     <span class="keyword">if</span> isnan(options.t_smooth), options.t_smooth = T/2; <span class="keyword">end</span>
+0105     kappa = 1/options.t_smooth;
+0106 
+0107     <span class="keyword">switch</span> options.basis, 
+0108       <span class="keyword">case</span> <span class="string">'cos'</span>,            omega = 2   * pi * [1:options.n_comp_max]       ./ T;
+0109       <span class="keyword">case</span> <span class="string">'sin'</span>,            omega = 2   * pi * [1:options.n_comp_max]       ./ T;
+0110       <span class="keyword">case</span> <span class="string">'cos+sin'</span>,        omega = 2   * pi * [1:options.n_comp_max]       ./ T;
+0111       <span class="keyword">case</span> <span class="string">'sin_half'</span>,       omega = 1/2 * pi * [1:options.n_comp_max]       ./ T;
+0112       <span class="keyword">case</span> <span class="string">'sin_horizontal'</span>, omega =       pi * [[1:options.n_comp_max]-1/2] ./ T;
+0113     <span class="keyword">end</span>   
+0114 
+0115     <span class="comment">%% assume two production steps between white noise and protein curves</span>
+0116     mseries = 1./[kappa^2+omega.^2]; 
+0117     mseries = mseries/mseries(1);
+0118     <span class="keyword">if</span> isnan(options.n_comp), options.n_comp = length(find(mseries&gt;0.05)); 
+0119       <span class="keyword">if</span> strcmp(options.basis,<span class="string">'cos+sin'</span>), options.n_comp = ceil(options.n_comp/2); <span class="keyword">end</span>
+0120     <span class="keyword">end</span>
+0121 
+0122     <span class="comment">%% mseries(1:options.n_comp)</span>
+0123 
+0124     options.central_mode_width   = options.central_first_mode_width   * mseries(1:options.n_comp);
+0125     options.deviation_mode_width = options.deviation_first_mode_width * mseries(1:options.n_comp);
+0126     
+0127     <span class="comment">%% alternative: linearly decreasing mode prior withs</span>
+0128     <span class="comment">%% options.central_mode_width   = options.central_first_mode_width   * [options.n_comp:-1:1] / options.n_comp;</span>
+0129     <span class="comment">%% options.deviation_mode_width = options.deviation_first_mode_width * [options.n_comp:-1:1] / options.n_comp;</span>
+0130     
+0131     <span class="keyword">switch</span> options.basis,
+0132       <span class="keyword">case</span> <span class="string">'cos+sin'</span>,
+0133         options.central_mode_width   = reshape([options.central_mode_width;options.central_mode_width],    1,2*options.n_comp);
+0134         options.deviation_mode_width = reshape([options.deviation_mode_width;options.deviation_mode_width],1,2*options.n_comp);
+0135     <span class="keyword">end</span>
+0136     
+0137     <span class="keyword">if</span> isempty(options.central_mode_mean),
+0138       options.central_mode_mean    =  zeros(size(options.central_mode_width));
+0139       options.deviation_mode_mean  =  zeros(size(options.deviation_mode_width));
+0140     <span class="keyword">end</span>
+0141     
+0142   <span class="keyword">end</span>
+0143   
+0144   <span class="keyword">if</span> isfinite(options.t_jump),
+0145     <span class="keyword">if</span> ~isfinite(options.central_jump_width),
+0146       options.central_jump_width = max(options.central_mode_width);
+0147       options.central_jump_mean  = 0;
+0148     <span class="keyword">end</span>
+0149     <span class="keyword">if</span> ~isfinite(options.deviation_jump_width),
+0150       options.deviation_jump_width = max(options.deviation_mode_width);
+0151       options.deviation_jump_mean  = 0;
+0152     <span class="keyword">end</span>
+0153   <span class="keyword">end</span>
+0154 
+0155   <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

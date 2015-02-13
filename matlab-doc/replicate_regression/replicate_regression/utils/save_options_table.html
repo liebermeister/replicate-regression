@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of save_options_table</title>
+  <meta name="keywords" content="save_options_table">
+  <meta name="description" content="my_table = save_options_table(options,tablefile)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">utils</a> &gt; save_options_table.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/utils&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>save_options_table
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>my_table = save_options_table(options,tablefile)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function my_table = save_options_table(options,tablefile) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> my_table = save_options_table(options,tablefile)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="mytable.html" class="code" title="function res = mytable(my_table,rownumbers,filename)">mytable</a>	result = mytable(names,rownumbers,filename)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/replicate_regression/replicate_regression_omics/replicate_regression_omics_analysis.html" class="code" title="">replicate_regression_omics_analysis</a>	Script replicate_regression_omics_analysis</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function my_table = save_options_table(options,tablefile)</a>
+0002 
+0003 <span class="comment">% my_table = save_options_table(options,tablefile)</span>
+0004 
+0005 fn = fieldnames(options);
+0006 
+0007 <span class="keyword">for</span> it = 1:length(fn),
+0008   my_table{it,1} = fn{it};
+0009   value = getfield(options,fn{it});
+0010   <span class="keyword">if</span> length(value) &gt; 1,
+0011     value = sprintf(<span class="string">'%5.2f '</span>,value); 
+0012   <span class="keyword">end</span>
+0013   <span class="keyword">if</span> isnumeric(value), value = num2str(value); <span class="keyword">end</span>
+0014   <span class="keyword">if</span> isempty(value), value = <span class="string">''</span>; <span class="keyword">end</span>
+0015   my_table{it,2} = value;
+0016 <span class="keyword">end</span>
+0017  
+0018 <span class="keyword">if</span> exist(<span class="string">'tablefile'</span>,<span class="string">'var'</span>),
+0019  <a href="mytable.html" class="code" title="function res = mytable(my_table,rownumbers,filename)">mytable</a>(my_table,0,tablefile);
+0020 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

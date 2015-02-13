@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demo_replicate_regression_create_data</title>
+  <meta name="keywords" content="demo_replicate_regression_create_data">
+  <meta name="description" content="---------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">demo_replicate_regression</a> &gt; demo_replicate_regression_create_data.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/demo_replicate_regression&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>demo_replicate_regression_create_data
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>---------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [t,x,sigma,l,t_true,x_true, t1,t2,t3,x1,x2,x3,sigma1,sigma2,sigma3,x1_true,x2_true,x3_true,x1_true_all,x2_true_all,x3_true_all] = demo_replicate_regression_create_data() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ---------------------------------
+ Create artificial data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././replicate_regression/demo/demo_replicate_regression/demo_replicate_regression.html" class="code" title="">demo_replicate_regression</a>	----------------------------------------------------------------</li><li><a href="demo_replicate_regression_core.html" class="code" title="">demo_replicate_regression_core</a>	----------------------------------------------------------------</li><li><a href="demo_replicate_regression_core_single.html" class="code" title="">demo_replicate_regression_core_single</a>	----------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [t,x,sigma,l,t_true,x_true, t1,t2,t3,x1,x2,x3,sigma1,sigma2,sigma3,x1_true,x2_true,x3_true,x1_true_all,x2_true_all,x3_true_all] = demo_replicate_regression_create_data()</a>
+0002 
+0003 
+0004 <span class="comment">% ---------------------------------</span>
+0005 <span class="comment">% Create artificial data</span>
+0006 
+0007 randn(<span class="string">'state'</span>,1);
+0008 
+0009 noise_level = 0.1;
+0010 
+0011 t_true  = 0:1:30;
+0012 x_true  = 2 * [0.1*t_true./(1+0.1*t_true)] .* exp(-0.1*t_true/2);
+0013 
+0014 offset2 =  0.1*x_true;
+0015 offset1 = -0.5*x_true;
+0016 offset3 =  0.5*x_true;
+0017 
+0018 ind1 = 5:6:20;
+0019 ind2 = 10:6:25;
+0020 ind3 = 18:6:30;
+0021 
+0022 t1 = t_true(ind1); 
+0023 t2 = t_true(ind2);
+0024 t3 = t_true(ind3);
+0025 
+0026 x1_true_all = x_true + offset1;
+0027 x2_true_all = x_true + offset2;
+0028 x3_true_all = x_true + offset3;
+0029 
+0030 x1_true = x_true(ind1) + offset1(ind1);
+0031 x2_true = x_true(ind2) + offset2(ind2);
+0032 x3_true = x_true(ind3) + offset3(ind3);
+0033 
+0034 x1 = x1_true + noise_level * randn(size(ind1));
+0035 x2 = x2_true + noise_level * randn(size(ind2));
+0036 x3 = x3_true + noise_level * randn(size(ind3));
+0037 
+0038 sigma1 = noise_level * ones(size(x1));
+0039 sigma2 = noise_level * ones(size(x2));
+0040 sigma3 = noise_level * ones(size(x3));
+0041 
+0042 t     = [t1, t2, t3];
+0043 x     = [x1, x2, x3];
+0044 sigma = [sigma1, sigma2, sigma3];
+0045 l     = [ones(size(t1)), 2*ones(size(t2)), 3*ones(size(t3))];
+0046 
+0047 [t,order] = sort(t);
+0048 x         = x(order);
+0049 sigma     = sigma(order);
+0050 l         = l(order);</pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
