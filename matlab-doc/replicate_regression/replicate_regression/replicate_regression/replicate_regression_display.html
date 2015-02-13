@@ -38,7 +38,7 @@ This function calls:
 <li><a href="rr_colors.html" class="code" title="function colors = rr_colors()">rr_colors</a>	</li><li><a href="../../.././replicate_regression/replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>	h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
-<li><a href="../../.././replicate_regression/demo/demo_replicate_regression/demo_replicate_regression.html" class="code" title="">demo_replicate_regression</a>	----------------------------------------------------------------</li><li><a href="../../.././replicate_regression/replicate_regression/demo_replicate_regression/demo_replicate_regression_core.html" class="code" title="">demo_replicate_regression_core</a>	----------------------------------------------------------------</li></ul>
+<li><a href="../../.././replicate_regression/demo/demo_replicate_regression/demo_replicate_regression.html" class="code" title="">demo_replicate_regression</a>	----------------------------------------------------------------</li><li><a href="../../.././replicate_regression/replicate_regression/replicate_regression_demo/demo_replicate_regression_core.html" class="code" title="">demo_replicate_regression_core</a>	----------------------------------------------------------------</li></ul>
 <!-- crossreference -->
 
 
@@ -100,29 +100,29 @@ This function is called by:
 0055   <span class="keyword">end</span>
 0056 <span class="keyword">end</span>
 0057 
-0058 
-0059 <span class="keyword">if</span> length(sigma_reg_replicate),
-0060 <span class="keyword">if</span> options.show_bands,
-0061   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{1},[x_reg_replicate{1}-sigma_reg_replicate{1}; x_reg_replicate{1}+sigma_reg_replicate{1}],[],colors{1},[],[],[],<span class="string">'-'</span>,2); hold on;
-0062   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{2},[x_reg_replicate{2}-sigma_reg_replicate{2}; x_reg_replicate{2}+sigma_reg_replicate{2}],[],colors{2},[],[],[],<span class="string">'-'</span>,2); hold on;
-0063   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{3},[x_reg_replicate{3}-sigma_reg_replicate{3}; x_reg_replicate{3}+sigma_reg_replicate{3}],[],colors{3},[],[],[],<span class="string">'-'</span>,2);hold on;
-0064 <span class="keyword">else</span>,
-0065   plot(t_reg,x_reg_replicate{1},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{1},<span class="string">'Linewidth'</span>,2); hold on;
-0066   plot(t_reg,x_reg_replicate{2},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{2},<span class="string">'Linewidth'</span>,2); hold on;
-0067   plot(t_reg,x_reg_replicate{3},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{3},<span class="string">'Linewidth'</span>,2); hold on;
+0058 <span class="keyword">if</span> length(sigma_reg_replicate),
+0059 <span class="keyword">if</span> options.show_bands,
+0060   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{1},[x_reg_replicate{1}-sigma_reg_replicate{1}; x_reg_replicate{1}+sigma_reg_replicate{1}],[],colors{1},[],[],[],<span class="string">'-'</span>,2); hold on;
+0061   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{2},[x_reg_replicate{2}-sigma_reg_replicate{2}; x_reg_replicate{2}+sigma_reg_replicate{2}],[],colors{2},[],[],[],<span class="string">'-'</span>,2); hold on;
+0062   <a href="../../.././replicate_regression/replicate_regression/utils/plot_range.html" class="code" title="function h = plot_range(t,x_mean,x_inner,x_outer,col0,col1,col2,opacity,linestyle,linewidth)">plot_range</a>(t_reg,x_reg_replicate{3},[x_reg_replicate{3}-sigma_reg_replicate{3}; x_reg_replicate{3}+sigma_reg_replicate{3}],[],colors{3},[],[],[],<span class="string">'-'</span>,2);hold on;
+0063 <span class="keyword">else</span>,
+0064   plot(t_reg,x_reg_replicate{1},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{1},<span class="string">'Linewidth'</span>,2); hold on;
+0065   plot(t_reg,x_reg_replicate{2},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{2},<span class="string">'Linewidth'</span>,2); hold on;
+0066   plot(t_reg,x_reg_replicate{3},<span class="string">'-'</span>,<span class="string">'Color'</span>,colors{3},<span class="string">'Linewidth'</span>,2); hold on;
+0067 <span class="keyword">end</span>
 0068 <span class="keyword">end</span>
-0069 <span class="keyword">end</span>
-0070 
-0071 <span class="keyword">if</span> options.show_central,
-0072   <span class="keyword">if</span> length(result),
-0073     <span class="keyword">if</span> options.show_bands,
-0074       h = [h plot(t_reg,x_reg,<span class="string">'k-'</span>,<span class="string">'Linewidth'</span>,2)]; 
-0075       plot(t_reg,x_reg + sigma_reg,<span class="string">'k--'</span>);  
-0076       plot(t_reg,x_reg - sigma_reg,<span class="string">'k--'</span>);  
+0069 
+0070 <span class="keyword">if</span> options.show_central,
+0071   <span class="keyword">if</span> length(result),
+0072     <span class="keyword">if</span> options.show_bands,
+0073       h = [h plot(t_reg,x_reg,<span class="string">'k-'</span>,<span class="string">'Linewidth'</span>,2)]; 
+0074       plot(t_reg,x_reg + sigma_reg,<span class="string">'k--'</span>);  
+0075       plot(t_reg,x_reg - sigma_reg,<span class="string">'k--'</span>);  
+0076       legends = [legends {<span class="string">'Regression'</span>}]; 
 0077     <span class="keyword">end</span>
-0078     legends = [legends {<span class="string">'Regression'</span>}]; 
-0079   <span class="keyword">end</span>
-0080 <span class="keyword">end</span>
+0078   <span class="keyword">end</span>
+0079 <span class="keyword">end</span>
+0080 
 0081 
 0082 hold on;
 0083 
@@ -170,6 +170,6 @@ This function is called by:
 0125 title(options.figure_title);
 0126 <span class="keyword">end</span>
 0127</pre></div>
-<hr><address>Generated on Fri 13-Feb-2015 15:19:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+<hr><address>Generated on Fri 13-Feb-2015 15:49:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
 </body>
 </html>
