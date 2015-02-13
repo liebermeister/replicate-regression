@@ -129,8 +129,8 @@ options_update.deviation_jump_width       = options.updating_factor * statistics
 rms_relative_residual = sqrt(mean((statistics.residuals(:)./statistics.sigma(:)).^2));
 
 if rms_relative_residual < 0.8,
-  display(sprintf('Residuals are too small: either error bars are too large or updating factor %f should be decreased\n',options.updating_factor));
+  display(sprintf('Residuals are too small: either error bars are too large\nor updating factor %f should be decreased\n',options.updating_factor));
 end
 if rms_relative_residual > 1.2,
-  display(sprintf('Residuals are too large: either error bars are too small or updating factor %f should be increased\n',options.updating_factor));
+  display(sprintf('Residuals are too large: either error bars are too small\nor updating factor %f should be increased\n',options.updating_factor));
 end

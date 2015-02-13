@@ -22,7 +22,7 @@ eval(default('base_DIR','[]'));
 
 foptions_default = struct(...
 'convenience_name', [], ...
-    'translation_table_file', [replicate_regression_DIR '/resources/SubtiWiki_id_mapping_20090701_renamed.txt'], ...
+    'translation_table_file', [replicate_regression_BASEDIR '/resources/SubtiWiki_id_mapping_20090701_renamed.txt'], ...
     'data_scale',[], ...
     'convert_to_logarithm',[],...
     'log_transformation','arithmetic',...
@@ -126,6 +126,8 @@ if length(foptions.result_file_matlab),
     display('Switching to log scale');
   end
 
+  options.set_std =   foptions.set_std;
+  
   [data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options,foptions);
 
   if foptions.run_crossvalidation,
@@ -152,11 +154,12 @@ end
 % ------------------------------------------------
 % Show crossvalidation errors
 
-crossvalidation_error_mcr_replicate
-crossvalidation_error_mcr_average
-crossvalidation_error_pooled
-crossvalidation_error_naive
-
+if length(crossvalidation_error_mcr_replicate),
+  crossvalidation_error_mcr_replicate
+  crossvalidation_error_mcr_average
+  crossvalidation_error_pooled
+  crossvalidation_error_naive
+end
 
 % ------------------------------------------------
 % Write results to table files
@@ -166,6 +169,8 @@ if length(foptions.options_out_csv),
   save_options_table(options_complete, [foptions.options_out_csv ]);
   display(sprintf('Saving updated options to file %s', [ foptions.options_out_csv ]));
 end
+
+display(sprintf('Result file directory %s',foptions.result_dir));
 
 if length(foptions.result_file_csv),
   if strcmp(foptions.result_file_csv(end-3:end),'.tsv'), foptions.result_file_csv = foptions.result_file_csv(1:end-4); end
@@ -198,6 +203,7 @@ end
 % Make graphics and save them
 
 if length(foptions.graphics_file),
+  display(sprintf('Graphics directory %s',foptions.graphics_dir));
   cd(foptions.result_dir);
   load(foptions.result_file_matlab);
   cd(foptions.graphics_dir);

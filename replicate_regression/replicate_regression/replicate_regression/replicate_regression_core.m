@@ -219,6 +219,10 @@ theta_prior_cov_inv     = diag(1./[sigma_alpha; sigma_beta].^2);
 x_mean                  = y';
 x_cov_inv               = diag(1./sigma.^2);
 
+if min(sigma)/max(sigma) < 0.00001,
+  warning('Large spread in assumed error bars detected - please check how error bars are computed');
+end
+
 % to avoid problems with ill-conditioned posterior covariance matrix:
 epsilon = 10^-5; 
 

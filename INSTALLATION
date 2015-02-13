@@ -11,11 +11,9 @@ INSTALLATION
 
   2. Include the path to the matlab directory 'replicate_regression' into your Matlab path
 
-  3. Insert the path to the matlab directory 'replicate_regression' into in the m-file 'replicate_regression_DIR'
+  3. For a demo on a single replicate regression, run 'demo_replicate_regression'
 
-  4. For a demo on a single replicate regression, run 'demo_replicate_regression'
-
-  5. To see the application to a small omics data set, 
+  4. To see the application to a small omics data set, 
      run omics_data_example.m in the subdirectory replicate_regression/demo/omics_data_example
      A data and options file is provided in the subdirectory
 

@@ -78,7 +78,6 @@ my_options = join_struct(options, options_update);
 
 tic
   display(sprintf('Running the final regression\n'));
-
   [data_average, data_rep, data_central, data_cross_average, data_cross_rep, data_fit, options_complete, statistics, options_update] = replicate_regression_biotable(data_combined, my_options);
   
   time_for_final_run = toc;
@@ -161,5 +160,5 @@ if foptions.run_crossvalidation,
   qq         = quantile(deviation(:),1-foptions.mark_outliers_percentage);
   data_reg.presumable_outliers = sparse(deviation>qq);
 else
-    data_reg.presumable_outliers = [];
+  data_reg.presumable_outliers = [];
 end

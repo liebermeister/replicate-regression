@@ -62,7 +62,7 @@ figure(26); clf;
 ind = isfinite(result.combined.DataMean);
 q1 = quantile(result.fit.DataMean(ind)-result.combined.DataMean(ind),0.05);
 q2 = quantile(result.fit.DataMean(ind)-result.combined.DataMean(ind),0.95);
-im(result.fit.DataMean-result.combined.DataMean,[q1,q2]);
+im(result.fit.DataMean-result.combined.DataMean,[q1,q2]); colorbar
 title('Residuals (color scale: 5%-95% quantiles)');
 
 switch image_format
