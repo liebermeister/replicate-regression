@@ -1,7 +1,8 @@
 data_dir	[ base_DIR '/data/' ]
 result_dir	[ base_DIR '/results/' ]
 graphics_dir	[ base_DIR '/graphics/' ]
-data_file_tsv	hahne_salt_stress_TEST_cytosol_data.csv
+data_file_csv	hahne_salt_stress_TEST_cytosol_data.csv
+set_std	0.5
 %
 data_file_matlab	hahne_salt_stress_TEST_cytosol_data.mat
 options_file	[ replicate_regression_DIR '/resources/mcr_options_nonlogarithmic_data.csv']

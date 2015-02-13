@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------
 % Demo example for Bayesian regression with multiple time series
 %
-% matlab function: replicate_regression.m
+% matlab function used: replicate_regression.m
 %
 %  1. Create artificial data
 %     o True data points (time points 't_true', values 'x_true')
@@ -12,9 +12,6 @@
 % Wolfram Liebermeister (2013)
 %
 % Contact: wolfram.liebermeister@gmail.com
-
-% make sure matlab path is set
-% addpath(genpath('replicate_regression'));
 
 clear; ca
 

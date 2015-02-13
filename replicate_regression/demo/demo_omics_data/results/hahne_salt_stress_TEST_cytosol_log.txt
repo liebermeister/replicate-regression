@@ -1,0 +1,6 @@
+Time for prior updating total : 25.191273 s
+Time for prior updating per loop: 8.397091 s
+Number of updating loops: 3
+Number of biological elements: 99
+Time for final run: 51.573669 s
+Time for final run per element: 0.520946 s

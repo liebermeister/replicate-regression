@@ -55,7 +55,6 @@ if options.show_central,
   end
 end
 
-
 if length(sigma_reg_replicate),
 if options.show_bands,
   plot_range(t_reg,x_reg_replicate{1},[x_reg_replicate{1}-sigma_reg_replicate{1}; x_reg_replicate{1}+sigma_reg_replicate{1}],[],colors{1},[],[],[],'-',2); hold on;
@@ -74,10 +73,11 @@ if options.show_central,
       h = [h plot(t_reg,x_reg,'k-','Linewidth',2)]; 
       plot(t_reg,x_reg + sigma_reg,'k--');  
       plot(t_reg,x_reg - sigma_reg,'k--');  
+      legends = [legends {'Regression'}]; 
     end
-    legends = [legends {'Regression'}]; 
   end
 end
+
 
 hold on;
 
