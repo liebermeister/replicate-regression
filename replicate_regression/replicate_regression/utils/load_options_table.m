@@ -1,7 +1,8 @@
-function GreatBigOptions = load_options_table(tablefile,base_DIR)
+function GreatBigOptions = load_options_table(tablefile)
 
-% tablefile can be th ename of the table file
-% or the table itself
+% Options = load_options_table(tablefile)
+%
+% 'tablefile' can be a string (the name of the table file) or can itself be a table 
 
 if isstr(tablefile), 
   GreatBigDataMatrix = load_any_table(tablefile);

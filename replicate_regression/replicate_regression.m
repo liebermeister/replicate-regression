@@ -1,8 +1,9 @@
-function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
+function [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
 
 % [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
 %
 % Bayesian replicate regression for multiple time series measured in replicate.
+%
 % Data are directly provided as vectors; they can be transformed to logarithmic scale if desired
 %
 % FUNCTION ARGUMENTS
@@ -81,6 +82,7 @@ function [result, options, offsets] = replicate_regression(t, y, sigma, r, flag_
 %  options.deviation_jump_width       X float    1     Prior widths sigma_beta_jump  (for beta_jump )
 %  options.flag_draw_sample           X Boolean  1     Draw sample curve parameters and curve from the posterior
 %  options.flag_time_derivative       X Boolean  0     Compute time derivative curves
+%  options.use_L_one_norm             X Boolean  0     Use statistical model with L1 norm (not Euclidean)
 %
 %  The basis functions are adjusted to the final time interval [ta,tb](from tt)
 %    'cos'            : cosine function, zero slope at t=ta and t=tb
@@ -139,7 +141,8 @@ options_default = struct(...
       'central_jump_mean',          0, ...
       'central_jump_width',         1, ...
       'deviation_jump_mean',        0, ...
-      'deviation_jump_width',       1 );
+      'deviation_jump_width',       1, ...
+      'use_L_one_norm', 0);
 
 options = replicate_regression_set_options(t, y, sigma, flag_fix_parameters, options_default, varargin);
 
@@ -269,7 +272,7 @@ x_average          = result.x_average + options.shift_value;
 x_sample_central   = sample.x_central + options.shift_value;
 x_sample_average   = sample.x_average + options.shift_value;
 x_fit              = result.x_fit + options.shift_value;
-x_cross_average  = result.x_cross_average + options.shift_value;
+x_cross_average    = result.x_cross_average + options.shift_value;
 x_cross_replicate  = result.x_cross_replicate + options.shift_value;
 x_replicate        = result.x_replicate;
 x_sample_replicate = sample.x_replicate;

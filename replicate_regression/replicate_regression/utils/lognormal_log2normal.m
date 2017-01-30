@@ -22,9 +22,12 @@ switch convention,
 
 end
 
+% ----------------------------------------------------------
 % test
-%
-%mu=10;sigma =1;
-%convention = 'geometric';
-%[mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention);
-%[mu,sigma] = lognormal_log2normal(mu_log,sigma_log,convention)
+
+if 0,
+ mu=10;sigma =1;
+ convention = 'geometric';
+ [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention);
+ [mu,sigma]         = lognormal_log2normal(mu_log,sigma_log,convention)
+end

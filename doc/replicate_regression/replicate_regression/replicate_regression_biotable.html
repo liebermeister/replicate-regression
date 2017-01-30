@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_biotable</title>
+  <meta name="keywords" content="replicate_regression_biotable">
+  <meta name="description" content="[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; replicate_regression_biotable.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_biotable
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]
+     = replicate_regression_biotable(data, options)
+
+ Multicurve regression for omics data set with a fixed prior
+
+ INPUTS
+ data:    biotable format
+          data.SampleName must contain number labels of data replicates
+ options: structure with directives for replicate regression 
+
+ OUTPUTS 
+ X_central, X_replicate, X_average (biotables)
+
+ Extra entries in options (that are not present in replicate_regression)
+ options.set_rel_std
+ options.set_abs_std
+ options.logarithmic_data
+ options.jump_names (list of strings):   names of data items reuireing a 'jump' basis function in multi-curve regression</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/replicate_regression.html" class="code" title="function [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)">replicate_regression</a>	[result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)</li><li><a href="replicate_regression_biotable_sanity_check.html" class="code" title="function [statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)">replicate_regression_biotable_sanity_check</a>	[statistics, options_update] = biotable_replicate_regression_sanity_check(options, alpha_offset, alpha, alpha_jump, beta_offset, beta, beta_jump, all_residuals, all_y, all_sigma)</li><li><a href="../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="replicate_regression_complete.html" class="code" title="function [data_reg, options_complete, options_update, crossvalidation_error] = replicate_regression_complete(data_replicates,options,foptions)">replicate_regression_complete</a>	[data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)</li><li><a href="replicate_regression_normalise.html" class="code" title="function data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);">replicate_regression_normalise</a>	data_adjusted = replicate_regression_normalise(data_reg, options, data_scale);</li></ul>
+<!-- crossreference -->
+
+
+
+<hr><address>Generated on Mon 30-Jan-2017 18:10:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

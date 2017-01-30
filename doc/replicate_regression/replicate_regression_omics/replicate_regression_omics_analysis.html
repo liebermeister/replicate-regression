@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_omics_analysis</title>
+  <meta name="keywords" content="replicate_regression_omics_analysis">
+  <meta name="description" content="-------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression_omics</a> &gt; replicate_regression_omics_analysis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression_omics&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_omics_analysis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>-------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> -------------------------------------------------------------------
+ Script replicate_regression_omics_analysis
+
+ Run replicate regression analysis for an omics dataset and save all results and graphics to files
+
+ Input variable: foptions_file
+
+ Filename of options file containing information about all further filenames, parameters, etc.
+ (also the filename of the omics data set)
+
+ foptions_file can also be a matlab structure with options  (instead of being a filename)
+
+
+ To run this script in a shell, use
+   matlab -r &quot;cd [DIRECTORY]; foptions_file = '[OPTIONS_FILENAME]'; replicate_regression_omics_analysis; quit;&quot;
+   where [DIRECTORY] is the directory in which this script is located
+
+ -------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/replicate_regression/biotable_interpolation_graphics_std.html" class="code" title="function biotable_interpolation_graphics_std(combined,averaged,replicate_averaged,p,ind_show,outfile);">biotable_interpolation_graphics_std</a>	</li><li><a href="../.././replicate_regression/replicate_regression/replicate_regression_complete.html" class="code" title="function [data_reg, options_complete, options_update, crossvalidation_error] = replicate_regression_complete(data_replicates,options,foptions)">replicate_regression_complete</a>	[data_reg, options_complete, options_update] = replicate_regression_complete(data_replicates,options)</li><li><a href="../.././replicate_regression/replicate_regression/replicate_regression_display_statistics.html" class="code" title="function replicate_regression_display_statistics( result, options, filename,image_format)">replicate_regression_display_statistics</a>	replicate_regression_display_statistics( result, options, filename,image_format)</li><li><a href="../.././replicate_regression/replicate_regression/replicate_regression_load_data_table.html" class="code" title="function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)">replicate_regression_load_data_table</a>	[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</li><li><a href="../.././replicate_regression/replicate_regression/replicate_regression_save_data_table.html" class="code" title="function all = replicate_regression_save_data_table(data_table, rep_name, basename)">replicate_regression_save_data_table</a>	all = replicate_regression_save_data_table(data_table, rep_name, basename)</li><li><a href="../.././replicate_regression/replicate_regression/utils/ca.html" class="code" title="function ca()">ca</a>	</li><li><a href="../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li><li><a href="../.././replicate_regression/replicate_regression/utils/load_options_table.html" class="code" title="function GreatBigOptions = load_options_table(tablefile)">load_options_table</a>	Options = load_options_table(tablefile)</li><li><a href="../.././replicate_regression/replicate_regression/utils/save_options_table.html" class="code" title="function my_table = save_options_table(options,tablefile)">save_options_table</a>	my_table = save_options_table(options, tablefile)</li><li><a href="replicate_regression_omics_default_options.html" class="code" title="function foptions = replicate_regression_omics_default_options()">replicate_regression_omics_default_options</a>	foptions = replicate_regression_omics_default_options()</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/demo/demo_omics_data/demo_omics_data.html" class="code" title="">demo_omics_data</a>	--------------------------------------------------------------</li><li><a href="../.././replicate_regression/replicate_regression_omics.html" class="code" title="function replicate_regression_omics(data_file, foptions_file, base_directory, goptions_file)">replicate_regression_omics</a>	replicate_regression_omics(data_file, foptions_file, base_directory)</li></ul>
+<!-- crossreference -->
+
+
+
+<hr><address>Generated on Mon 30-Jan-2017 18:10:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

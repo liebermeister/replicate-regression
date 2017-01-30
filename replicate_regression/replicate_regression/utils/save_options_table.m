@@ -1,6 +1,8 @@
 function my_table = save_options_table(options,tablefile)
 
-% my_table = save_options_table(options,tablefile)
+% my_table = save_options_table(options, tablefile)
+%
+% Save matlab structure 'options' as a table file
 
 fn = fieldnames(options);
 
@@ -16,5 +18,5 @@ for it = 1:length(fn),
 end
  
 if exist('tablefile','var'),
- mytable(my_table,0,tablefile);
+  mytable(my_table,0,tablefile);
 end

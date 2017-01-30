@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_insert_stddev</title>
+  <meta name="keywords" content="replicate_regression_insert_stddev">
+  <meta name="description" content="sigma = replicate_regression_insert_stddev(x,sigma,foptions)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; replicate_regression_insert_stddev.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression/replicate_regression&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_insert_stddev
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>sigma = replicate_regression_insert_stddev(x,sigma,foptions)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function sigma = replicate_regression_insert_stddev(x, sigma, foptions, r) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> sigma = replicate_regression_insert_stddev(x,sigma,foptions)
+
+ compute standard deviations from error model</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="replicate_regression_load_data_table.html" class="code" title="function [data_replicates, data, data_pointwise_average, explanatory_variable,d] = replicate_regression_load_data_table(filename, foptions)">replicate_regression_load_data_table</a>	[data, data_replicates, data_pointwise_average, explanatory_variable] = replicate_regression_load_data_table(filename, foptions)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sigma = replicate_regression_insert_stddev(x, sigma, foptions, r)</a>
+0002 
+0003 <span class="comment">% sigma = replicate_regression_insert_stddev(x,sigma,foptions)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% compute standard deviations from error model</span>
+0006 
+0007 <span class="keyword">switch</span> foptions.data_scale,
+0008   
+0009   <span class="keyword">case</span> {<span class="string">'log2'</span>, <span class="string">'log'</span>, <span class="string">'ln'</span>, <span class="string">'log10'</span>, <span class="string">'log2 ratio'</span>},
+0010     <span class="comment">%% sigma as absolute standard error of logarithm</span>
+0011 
+0012     <span class="comment">% to find outlier, compare data values to the gene medians (for the respective replicate!)</span>
+0013     <span class="keyword">for</span> it = unique(r),
+0014       ind_r              = find(r==it);
+0015       x_medians(:,ind_r) = repmat(nanmedian(x(:,ind_r)')',1,length(ind_r));
+0016     <span class="keyword">end</span>
+0017     <span class="comment">% alternative: to find outlier, compare data values to the gene medians (for all replicates together)</span>
+0018     <span class="comment">% x_medians          = repmat(nanmedian(x')',1,size(x,2));</span>
+0019     ind_outlier        = find(abs(x - x_medians) &gt; foptions.log_data_adjust_std_threshold);
+0020     sigma              = foptions.data_std_log * ones(size(x));
+0021     sigma(ind_outlier) = foptions.log_data_adjust_std_factor;
+0022     
+0023   <span class="keyword">case</span> <span class="string">'absolute'</span>,
+0024     <span class="comment">%% sigma as relative standard error</span>
+0025     sigma = foptions.data_std_relative * x;
+0026     sigma(sigma&lt;foptions.data_std_minimal) = foptions.data_std_minimal;
+0027   
+0028   <span class="keyword">otherwise</span>
+0029     error(<span class="string">'unknown data scale'</span>);
+0030 
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 13-Feb-2015 15:49:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

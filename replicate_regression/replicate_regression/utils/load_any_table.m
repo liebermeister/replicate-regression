@@ -7,17 +7,21 @@ function result = load_any_table(filename,delimiter)
 
 if ~exist('delimiter','var'), delimiter = sprintf('\t'); end
 
+% check if file exists
 fid           = fopen(filename);
 try
-  column_titles = fgets(fid);
+  tabnum = 0;
+  column_titles = 1;
+  while column_titles ~=-1,
+    column_titles = fgets(fid);
+    tabnum = max(tabnum, length(strfind(column_titles,delimiter)));
+  end
 catch
   error(['File ' filename ' not found.']);
 end
 fclose(fid);
 
-tab_pos = [0,unique([strfind(column_titles,delimiter)])];
-
-textscanstring = repmat('%s',1,length(tab_pos));
+textscanstring = repmat('%s',1,tabnum+1);
 
 fid = fopen(filename);
 A   = textscan(fid,textscanstring,'delimiter',delimiter);

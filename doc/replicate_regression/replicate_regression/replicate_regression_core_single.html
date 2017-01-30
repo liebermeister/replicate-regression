@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression_core_single</title>
+  <meta name="keywords" content="replicate_regression_core_single">
+  <meta name="description" content="[result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; <a href="#">replicate_regression</a> &gt; replicate_regression_core_single.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression/replicate_regression&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression_core_single
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)
+
+ Bayesian replicate regression for a time series with a single replicate
+
+ DESCRIPTION
+  Interpolation of single time series data
+  The regression functions are represented by linear combinations of basis functions (e.g. Fourier components)
+  The expansion coefficients (=model parameters) given prior distributions and estimated by taking the posterior mode
+
+ FUNCTION ARGUMENTS
+  Each data point is a triple [t(i), y(i), sigma(i)] of 
+   - time point t(i) 
+   - measured value y(i) 
+   - standard deviation (error bar) sigma(i)
+
+  In this script, the function arguments t, y, sigma 
+  are given as ROW vectors (or as matrices, where each row is treated separately)
+
+ FUNCTION OUTPUTS 
+   Row vectors of regression curves:
+    'x'  central regression curves
+   and the corresponding uncertainties (row vector):
+    'sigma_x'
+
+  'parameters' is a structure array containing the estimated parameter values 
+        (to be used for statistical evaluation of the prior hyperparameters)
+
+  'x_sample' is a vector of predicted data, obtained from a random sample from the posterior
+
+ OPTIONS FOR THE ALGORITHM
+  Detailed options are given the function argument 'p', 
+  a structure array with (optional) fields: 
+
+    options.basis                 : type of basis functions
+    options.use_offset            : (Boolean) flag for stating that there is a constant basis function
+    options.n_comp                : number of Fourier components (not including the constant offset)
+                                    (sin and cos for the same wavenumber are counted as one component)
+    options.t_jump                : add (at the beginning) a component that yields a constant offset 
+    options.t_smooth              : time constant for estimating production rates
+    options.constant_before_start : set all basis functions to constant values for negative time values
+
+    options.mode_mean             : prior mean for Fourier coefficients alpha for regression curve 
+                                      (vector; same values are used for for sin and cos)
+    options.offset_mean           : the same (scalar) for the constant basis function (default 1)
+    options.jump_mean             : the same (scalar) for the jump basis function (default 1)
+    options.mode_width            : prior width for Fourier coefficients alpha for central curve 
+                                      (vector; same values are used for for sin and cos)
+    options.offset_width          : the same (scalar) for the constant basis function (default 1)
+    options.jump_width            : the same (scalar) for the jump basis function (default 1)
+    options.flag_draw_sample      : Draw sample curve parameters and curve from the posterior
+    options.flag_time_derivative  : Compute time derivative curves
+ 
+
+  The basis functions are adjusted to the final time interval [ta,tb](from tt)
+    'cos'            : cosine function, zero slope at t=ta and t=tb
+    'sin'            : sine function, zero value at t=ta and t=tb
+    'sin_half'       : sine function, zero value at t=ta
+    'sin_horizontal' : sine function, zero value at t=ta, zero slope at t=tb
+    'cos+sin'        : cosine and sine functions, no restriction
+    'polynomial'     : polynomial function, zero value at t=ta
+    'exp'            : exponentially relaxing functions (t&lt;0 =&gt; f=0; t&gt;0 =&gt; f = 1-exp(t/tau);
+
+  The entire curves are shifted by a constant basis function 
+  This can be suppressed by setting options.use_offset = 1
+
+ Wolfram Liebermeister (2010)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maximise_bayesian_posterior_L1.html" class="code" title="function [x_max_posterior, neg_log_posterior, x_min, x_max, x_cov_posterior, y_cov_posterior] = maximise__bayesian_posterior_L1(data_mean, data_std, prior_mean, prior_std, R)">maximise_bayesian_posterior_L1</a>	function [x_max_posterior, neg_log_posterior, x_min, x_max, x_cov_posterior, y_cov_posterior] = maximise_bayesian_posterior_L1(data_mean, data_std, prior_mean, prior_std, R)</li><li><a href="replicate_regression_construct_basis.html" class="code" title="function [V, V_reg, W, W_reg] = mr_construct_basis_functions(t,tt,nr,options);">replicate_regression_construct_basis</a>	[V, V_reg, W, W_reg] = mr_construct_basis_functions(t,tt,options);</li><li><a href="../.././replicate_regression/replicate_regression/utils/column.html" class="code" title="function x = column(x)">column</a>	transform a vector (row or column) into a column vector</li><li><a href="../.././replicate_regression/replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href="../.././replicate_regression/replicate_regression/utils/join_struct.html" class="code" title="function c = join_struct(a,b)">join_struct</a>	c = join_struct(a,b)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././replicate_regression/demo/demo_replicate_regression/demo_replicate_regression_core_single.html" class="code" title="">demo_replicate_regression_core_single</a>	----------------------------------------------------------------</li><li><a href="../.././replicate_regression/replicate_regression.html" class="code" title="function [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)">replicate_regression</a>	[result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)</li><li><a href="replicate_regression_core_crossvalidation.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core_crossvalidation(t, y, sigma, r, t_new, flag_single, options);">replicate_regression_core_crossvalidation</a>	[result, parameters, options, sample] = replicate_regression_core_crossvalidation(t, y, sigma, r, t_new, flag_single, options);</li></ul>
+<!-- crossreference -->
+
+
+
+<hr><address>Generated on Mon 30-Jan-2017 18:10:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

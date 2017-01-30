@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of replicate_regression</title>
+  <meta name="keywords" content="replicate_regression">
+  <meta name="description" content="[result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">replicate_regression</a> &gt; replicate_regression.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ./replicate_regression&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>replicate_regression
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [result, options] = replicate_regression(t, y, sigma, r, flag_fix_parameters, varargin)
+
+ Bayesian replicate regression for multiple time series measured in replicate.
+
+ Data are directly provided as vectors; they can be transformed to logarithmic scale if desired
+
+ FUNCTION ARGUMENTS
+
+  t, y, sigma, r:
+    input data (times, values, standard errors, replicate labels)
+    given as row vectors (see replicate_regression_core.m)
+
+  flag_fix_parameters (Boolean, optional):
+    If set to 1, the options given in the following argument(s) will be accepted
+    without changes (otherwise they will be checked and updated)
+
+  varagin (optional) 
+    Either a list of property/value pairs for algorithm options (list see below).
+    or a structure containing the property/value pairs (this is mandatory if flag_fix_parameters is set to 1)
+    
+ FUNCTION OUTPUT
+
+ result
+    matlab struct with results from replicate regression
+
+ options
+    matlab struct with options values that were used in the calculation
+    The options list is supposed to be ordered by priority; earlier options override later options
+
+  The function is a wrapper for the function 'replicate_regression_core'
+  In converting the data to logarithms, y and sigma are either taken to be
+  *medians* and *geometric standard deviations*, or *means* and *standard deviations* 
+  of the data values. The choice is defined by the argument 'options.transformation'
+
+ LIST OF OPTIONS ('X' marks options also appearing in function 'replicate_regression_core')
+
+  OPTION                               TYPE     DEFAULT        MEANING
+  options.verbose                      Boolean  1              Output information during regression
+  options.is_logarithmic               Boolean  0              Declare that data are logarithmic
+  options.convert_to_logarithm         Boolean  1              Convert data to logarithms for regression
+  options.log_transformation           string   'arithmetic'   'arithmetic', 'geometric'
+  options.run_crossvalidation          Boolean  0              Run crossvalidation
+  options.set_std                      float    nan            Value to replace all data standard deviations
+  options.insert_std                   float    1              Value to replace missing data standard deviations
+                                                         
+  options.start_at_t                   float    0              Start regression curves at starting time 'start_at_t' (instead of t=0)
+  options.start_value                  float    nan            Fixed start value for regression curves
+  options.shift_data                   string   'mean'         Policy for shifting data before regression
+                                                               {'none', 'fixed_start_value', 'mean', 'initial', 'fixed_1'}
+  options.shift_value                  float    nan            Shift used when shifting the data 
+  options.basis                      X string   'cos+sin'      Type of basis functions
+  options.n_comp                     X int      nan            Fixed number of basis functions
+  options.n_comp_min                   int      1              Minimal number of basis functions
+  options.n_comp_max                   int      20             Maximal number of basis functions
+  options.use_offset                 X Boolean  1              Use constant function as one of the basis functions 
+  options.constant_before_start      X Boolean  0              Set all basis functions constant for t&lt;0
+  options.deviation_same_start         Boolean  0              Enforce identical start values for all replicates
+  options.remove_offset              X Boolean  0              Omit offset when creating the regression curves 
+                                                        
+  options.t_smooth                     float    nan            Time constant for setting decreasing prior widths 
+  options.t_jump                     X float    nan            Time constant for initial jump basis function
+  options.t_interp                     float    t              Time points for interpolated regression curves
+  options.average_std                X string   'std_dev_mean' Type of uncertainty to be reported for average curve
+                                                         
+  options.central_offset_mean        X float    0     Prior mean  sigma_alpha_0    (for alpha_0   )
+  options.central_offset_width       X float    1     Prior width  sigma_alpha_0    (for alpha_0   )
+  options.central_first_mode_mean    X float    0     Prior mean  sigma_alpha_1    (for alpha_1   )
+  options.central_first_mode_width   X float    1     Prior width  sigma_alpha_1    (for alpha_1   )
+  options.central_mode_mean          X vector   []    Prior means sigma_alpha_m    (for alpha_m   )
+  options.central_mode_width         X vector   []    Prior widths sigma_alpha_m    (for alpha_m   )
+  options.central_jump_mean          X float    nan   Prior means sigma_alpha_jump (for alpha_jump)
+  options.central_jump_width         X float    nan   Prior widths sigma_alpha_jump (for alpha_jump)
+  options.deviation_offset_mean      X float    0     Prior mean  sigma_beta_0     (for beta_0    )
+  options.deviation_offset_width     X float    1     Prior width  sigma_beta_0     (for beta_0    )
+  options.deviation_first_mode_mean  X float    0     Prior mean  sigma_beta_1     (for beta_1    )
+  options.deviation_first_mode_width X float    1     Prior width  sigma_beta_1     (for beta_1    )
+  options.deviation_mode_mean        X float    []    Prior means sigma_beta_m     (for beta_m    )
+  options.deviation_mode_width       X float    []    Prior widths sigma_beta_m     (for beta_m    )
+  options.deviation_jump_mean        X float    0     Prior means sigma_beta_jump  (for beta_jump )
+  options.deviation_jump_width       X float    1     Prior widths sigma_beta_jump  (for beta_jump )
+  options.flag_draw_sample           X Boolean  1     Draw sample curve parameters and curve from the posterior
+  options.flag_time_derivative       X Boolean  0     Compute time derivative curves
+  options.use_L_one_norm             X Boolean  0     Use statistical model with L1 norm (not Euclidean)
+
+  The basis functions are adjusted to the final time interval [ta,tb](from tt)
+    'cos'            : cosine function, zero slope at t=ta and t=tb
+    'sin'            : sine function, zero value at t=ta and t=tb
+    'sin_half'       : sine function, zero value at t=ta
+    'sin_horizontal' : sine function, zero value at t=ta, zero slope at t=tb
+    'cos+sin'        : cosine and sine functions, no restriction
+    'polynomial'     : polynomial function, zero value at t=ta
+    'exp'            : exponentially relaxing functions (t&lt;0 =&gt; f=0; t&gt;0 =&gt; f = 1-exp(t/tau);
+
+  The entire curves are shifted by a constant basis function 
+  This can be suppressed by setting options.use_offset = 1
+
+ Wolfram Liebermeister (2013)
+
+ wolfram.liebermeister@gmail.com</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href=".././replicate_regression/replicate_regression/replicate_regression_core.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core(t,y,sigma,r,tt,options)">replicate_regression_core</a>	[result, parameters, options, sample] = replicate_regression_core(t,y,sigma,r,tt,options)</li><li><a href=".././replicate_regression/replicate_regression/replicate_regression_core_crossvalidation.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core_crossvalidation(t, y, sigma, r, t_new, flag_single, options);">replicate_regression_core_crossvalidation</a>	[result, parameters, options, sample] = replicate_regression_core_crossvalidation(t, y, sigma, r, t_new, flag_single, options);</li><li><a href=".././replicate_regression/replicate_regression/replicate_regression_core_single.html" class="code" title="function [result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)">replicate_regression_core_single</a>	[result, parameters, options, sample] = replicate_regression_core_single(t,y,sigma,tt,options)</li><li><a href=".././replicate_regression/replicate_regression/replicate_regression_set_options.html" class="code" title="function options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)">replicate_regression_set_options</a>	options = replicate_regression_set_options(t, y, sigma, fix_parameters, options_default, varargin)</li><li><a href=".././replicate_regression/replicate_regression/utils/default.html" class="code" title="function commandstring = default(varargin)">default</a>	commandstring = default(varname1,defaultvalue1,varname2,defaultvalue2,...)</li><li><a href=".././replicate_regression/replicate_regression/utils/lognormal_log2normal.html" class="code" title="function [mu,sigma] = lognormal_log2normal(mu_log,sigma_log,convention)">lognormal_log2normal</a>	convert mean and std dev of Gaussian random variable into</li><li><a href=".././replicate_regression/replicate_regression/utils/lognormal_normal2log.html" class="code" title="function [mu_log,sigma_log] = lognormal_normal2log(mu,sigma,convention)">lognormal_normal2log</a>	convert characteristics of log-normal random variable  X</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href=".././replicate_regression/demo/demo_replicate_regression/demo_replicate_regression.html" class="code" title="">demo_replicate_regression</a>	----------------------------------------------------------------</li><li><a href=".././replicate_regression/replicate_regression/replicate_regression_biotable.html" class="code" title="function [X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update] = replicate_regression_biotable(data, options)">replicate_regression_biotable</a>	[X_average, X_replicate, X_central, X_cross_average, X_cross_replicate, X_fit, options, statistics, options_update]</li></ul>
+<!-- crossreference -->
+
+
+
+<hr><address>Generated on Mon 30-Jan-2017 18:10:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

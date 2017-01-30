@@ -63,15 +63,16 @@ function replicate_regression_omics(data_file, foptions_file, base_directory, go
 %   data_scale              'absolute' or 'log2' (also 'ln','log','log10','log2 ratio'; these are all treated like 'log2');
 %   data_min_num_replicates minimal number of valid replicates (genes with less valid replicates are discarded; default 1)
 %  For "absolute" data:
-%    data_outliers_upper     upper threshold; points above are outliers (increase std dev by factor of 3)
-%    data_outliers_lower     lower threshold; points below are outliers (increase std dev by factor of 3)
+%    abs_data_adjust_std_upper     upper threshold; points above are outliers (increase std dev by factor of 3)
+%    abs_data_adjust_std_lower     lower threshold; points below are outliers (increase std dev by factor of 3)
 %    data_std_relative       default for relative standard deviation
 %    data_std_minimal        minimal standard deviation
 %  For logarithmic data ( 'log2', 'ln','log','log10','log2 ratio')
-%    data_std_log            default for standard deviation (on log scale)
-%    data_outliers_threshold threshold for data values (on chosen log scale) to be counted as outlier
-%                            (check | [data value] - [median for this gene & replicate] | )
-%    data_std_log_outlier    standard deviation (on log scale) for data counted as outliers
+%    data_std_log                  default for standard deviation (on log scale)
+%    log_data_adjust_std_threshold threshold for data values (on chosen log scale) for which std dev is modified
+%                                  (criterion:  | [data value] - [median for this gene & replicate] | > threshold )
+%                                  for the inserted std dev, see next entry
+%    log_data_adjust_std_factor    new std width = factor * absolute deviation from median
 %
 %   data_min_data_points    minimal number of data points required in the analysis (default 3)
 %                           at least one replicate has to reach this number, points are times t<0 do not count
@@ -81,9 +82,11 @@ function replicate_regression_omics(data_file, foptions_file, base_directory, go
 %                           'arithmetic': data=mean values and plotting on absolute scale
 %                           'geometric' : data = median values and plotting on log scale (but data on absolute scale)
 %   ignore_std_deviations   Boolean, ignore standard deviations given in data
+%   basis                   string: type of basis functions
 %   fixed_prior             keeping the prior fixed? (Boolean, default 0)
 %   prior_updating          number of prior updating iterations (default 10)
-%   updating_factor         updating factor, default 1.1
+%   updating_factor         prior updating factor, default 1.2
+%   updating_factor_final   prior updating factor before last regression; default [] (not set)
 %   update_prior_means      change parameter means from 0 to posterior means while updating? default 0
 %   t_smooth                time constant defining how prior widths depend on the frequency
 %   options_start_value     fixed starting value -> to be inserted into options as options.start_value

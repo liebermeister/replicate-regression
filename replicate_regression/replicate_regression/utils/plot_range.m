@@ -12,8 +12,8 @@ if sum(isfinite(t))==0, t = [1:size(x_mean,1)]'; end
 eval(default('x_outer','[]','col0','[0 0 1]','col1','[]','col2','[]','opacity','[]','linestyle','''-''','linewidth','1'));
 
 if isempty(x_outer),
-  if isempty(col1), col1 = .1  * col0 + .9 * [1 1 1]; end
-  if isempty(col2), col2 = .05 * col0 + .95 * [1 1 1]; end
+  if isempty(col1), col1 = .2  * col0 + .8  * [1 1 1]; end
+  if isempty(col2), col2 = .1  * col0 + .9  * [1 1 1]; end
 else,
   if isempty(col1), col1 = .2 * col0 + .8 * [1 1 1]; end
   if isempty(col2), col2 = .1 * col0 + .9 * [1 1 1]; end
@@ -27,15 +27,15 @@ if size(x_outer,2) == 1,
 end
 
 hold on;
-if~isempty(x_outer),
-  simple_range_plot(t,x_outer,col0,col2,opacity);
+if ~isempty(x_outer),
+  simple_range_plot(t,x_outer,col0,col2,opacity, linestyle);
 end
-simple_range_plot(t,x_inner,col0,col1,opacity);
+simple_range_plot(t,x_inner,col0,col1,opacity, linestyle);
 
-h = plot(t,x_mean,linestyle,'Color',col0,'Linewidth',linewidth);
+h = plot(t,x_mean,'Color',col0,'Linewidth',linewidth);
 
 
-function simple_range_plot(t,x, col0, col, opacity)
+function simple_range_plot(t,x, col0, col, opacity, linestyle)
 
 if size(t,2) ~= 1, t = t'; end
 if size(x,2) ~= 2, x = x'; end
@@ -57,5 +57,7 @@ else,
   h = fill([t;flipud(t)],[x(:,1); flipud(x(:,2))],col,'EdgeColor',col);
 end
 
-plot(t,x(:,1),'Color',col0);
-plot(t,x(:,2),'Color',col0);
+if length(linestyle),
+  plot(t,x(:,1),linestyle,'Color',col0);
+  plot(t,x(:,2),linestyle,'Color',col0);
+end
