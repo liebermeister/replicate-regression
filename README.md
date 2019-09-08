@@ -1,9 +1,7 @@
 Replicate time series regression functions for Matlab
 =====================================================
 
-Wolfram Liebermeister (2015)
-
-Dependencies:
+## Dependencies:
 
   o Matlab utility functions    (https://github.com/liebermeister/matlab-utils)
 
@@ -11,4 +9,11 @@ Dependencies:
 
 Please make sure that this matlab package is installed in your system and that all its subdirectories are included in your matlab path.
 
-Contact: <wolfram.liebermeister@gmail.com>
+## Installation
+Please see the [installation instructions](INSTALLATION).
+
+## License
+This package is released under the [GNU General Public License](LICENSE).
+
+## Contact
+Please contact [Wolfram Liebermeister](wolfram.liebermeister@gmail.com) with any questions or comments.
