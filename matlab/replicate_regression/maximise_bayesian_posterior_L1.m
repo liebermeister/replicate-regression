@@ -93,7 +93,7 @@ ub    = x_threshold * ones(2*n_q+n_pars,1);
 
 switch solver,
   case 'cplex',
-    opt = cplexoptimset('Display','off');
+    opt =  cplexoptimset('cplex');
     [z_opt,neg_log_posterior, exitflag]  = cplexlp(f, Aineq, bineq, Aeq, beq,lb,ub,[],opt);
   case 'linprog',
     opt = optimset('Display','off');
