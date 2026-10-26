@@ -9,7 +9,8 @@
 % prior_mean, prior_std: (n_pars x 1) colunm vectors
 %
 % NOTE THAT THE SOLUTION NEED NOT BE UNIQUE!!
-% Using linprog (the default) tends to give a symmetric solution; cplex may yield a non-symmetric solution
+% Using linprog (the default) tends to give a symmetric solution; other solvers
+% (e.g. Gurobi, see optim_solver in matlab-utils) may yield a non-symmetric solution
 %
 % NOTE that the posterior covariance matrices are not exact,  but
 % computed via a simple heuristics:
@@ -27,13 +28,7 @@ function [x_max_posterior, neg_log_posterior, x_min, x_max, x_cov_posterior, y_c
 % if parameters are on log scale, this is huge; otherwise, this value may have to be increased
 x_threshold = 1000; 
 
-solver = 'linprog';
-%solver = 'cplex';
-
-if ~exist('cplexlp','file'),
-  display('Using linprog solver');
-  solver = 'linprog';
-end
+solver = optim_solver; % solver used by lp_solve (for error messages)
 
 data_mean = column(data_mean);
 data_std  = column(data_std);
@@ -91,27 +86,13 @@ beq   = -q;
 lb    = [zeros(2*n_q,1); -x_threshold*ones(n_pars,1)];
 ub    = x_threshold * ones(2*n_q+n_pars,1);
 
-switch solver,
-  case 'cplex',
-    opt =  cplexoptimset('cplex');
-    [z_opt,neg_log_posterior, exitflag]  = cplexlp(f, Aineq, bineq, Aeq, beq,lb,ub,[],opt);
-  case 'linprog',
-    opt = optimset('Display','off');
-    [z_opt,neg_log_posterior, exitflag]  = linprog(f, Aineq, bineq, Aeq, beq,lb,ub,[],opt);
-end
+[z_opt,neg_log_posterior, exitflag]  = lp_solve(f, Aineq, bineq, Aeq, beq,lb,ub);
 
 if exitflag<=0,
   % try once more with relaxed lower and upper bounds
   lb    = [zeros(2*n_q,1); -10^10*x_threshold*ones(n_pars,1)];
   ub    = 10^10*x_threshold * ones(2*n_q+n_pars,1);
-%  switch solver,
-%    case 'cplex',
-      opt = cplexoptimset('Display','off');
-      [z_opt,neg_log_posterior, exitflag]  = cplexlp(f, Aineq, bineq, Aeq, beq,lb,ub,[],opt);
-%    case 'linprog',
-%      opt = optimset('Display','off');
-%      [z_opt,neg_log_posterior, exitflag]  = linprog(f, Aineq, bineq, Aeq, beq,lb,ub,[],opt);
-%  end
+  [z_opt,neg_log_posterior, exitflag]  = lp_solve(f, Aineq, bineq, Aeq, beq,lb,ub);
 end
   
 if exitflag<=0,
@@ -150,10 +131,7 @@ for it = 1:n_pars,
 
   % find minimal possible x value
   f(2*n_q+it) = 1;
-  switch solver,
-    case 'cplex',   [z_opt_min,value,exitflag] = cplexlp(f, Aineq, bineq, Aeq, beq,lb,ub,z_opt,opt);
-    case 'linprog', [z_opt_min,value,exitflag] = linprog(f, Aineq, bineq, Aeq, beq,lb,ub,z_opt,opt);
-  end
+  [z_opt_min,value,exitflag] = lp_solve(f, Aineq, bineq, Aeq, beq,lb,ub);
   if exitflag<=0, 
     warning(sprintf('Solver %s: No solution found - exitflag %d',solver, exitflag));
     x_min(it,1) = z_opt(2*n_q + it);
@@ -163,10 +141,7 @@ for it = 1:n_pars,
 
   % find maximal possible x value
   f(2*n_q+it) = -1;
-  switch solver,
-    case 'cplex',   [z_opt_max,value,exitflag] = cplexlp(f, Aineq, bineq, Aeq, beq,lb,ub,z_opt,opt);
-    case 'linprog', [z_opt_max,value,exitflag] = linprog(f, Aineq, bineq, Aeq, beq,lb,ub,z_opt,opt);
-  end
+  [z_opt_max,value,exitflag] = lp_solve(f, Aineq, bineq, Aeq, beq,lb,ub);
   if exitflag<=0, 
     warning(sprintf('Solver %s: No solution found - exitflag %d',solver, exitflag)); 
     x_max(it,1) = z_opt(2*n_q + it);
