@@ -7,6 +7,8 @@ Replicate time series regression functions for Matlab
 
   o SBtab toolbox  (https://github.com/liebermeister/sbtab-matlab)
 
+  o Metabolic Network Toolbox  (https://github.com/liebermeister/metabolic-network-toolbox)
+
 Please make sure that this matlab package is installed in your system and that all its subdirectories are included in your matlab path.
 
 ## Installation
